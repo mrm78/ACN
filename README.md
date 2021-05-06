@@ -1,1 +1,1 @@
-A Cool Name Project
+# A Cool Name Project
