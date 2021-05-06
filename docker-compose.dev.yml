@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  web:
+    build: 
+      network: host
+      context: .
+      dockerfile: ./docker/back/Dockerfile
+    container_name: backend_app
+    restart: unless-stopped
+    env_file:
+      - ./docker/back/backend.env
+    volumes: 
+      - ./ACN_backend_service
+    command: ./scripts/run.sh
+    network_mode: host
+  
+  swagger:
+    image: swaggerapi/swagger-ui
+    container_name: swagger
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./ACN_backend_service:/usr/share/nginx/html/swagger
+    environment:
+      API_URL: swagger/swagger.yml
