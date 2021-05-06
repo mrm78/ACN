@@ -1,0 +1,93 @@
+.root {
+  height: 100%;
+}
+.participants {
+  width: 100%;
+  background-color:#ffc2c2;
+  padding: 10px 0px;
+  overflow: hidden;
+}
+@media screen and (min-width: 600px) {
+  .participants {
+    height: 100vh;
+  }
+}
+.chatMessagesContainer {
+  height: 100vh;
+  background-image: url("../img/back.png");
+  background-repeat: repeat;
+  /* padding: 10px; */
+  overflow-y: scroll;
+}
+.avatarContainer {
+  height: 90px;
+  width: 100%;
+  position: relative;
+  margin: 16px;
+}
+@media screen and (min-width: 600px) {
+  .chatAvatar {
+    width: 80px !important;
+    height: 80px !important;
+    margin: 0px 10px 0px 10px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .chatAvatar {
+    width: 60px !important;
+    height: 60px !important;
+  }
+}
+.messagePaper {
+  position: relative;
+  border-radius: 20px 20px 20px 0px !important;
+  background-color: rgb(255, 255, 255) !important;
+  padding: 10px;
+  margin: 7px 0 7px 0;
+}
+.selfMessagePaper {
+  position: relative;
+  border-radius: 20px 20px 0px 20px !important;
+  background-color: #ffc2c2 !important;
+  padding: 10px;
+  margin: 7px 0 7px 0;
+}
+.avatar {
+  cursor: pointer;
+  width: 80px !important;
+  height: 80px !important;
+}
+@media screen and (max-width: 600px) {
+  .avatar {
+    width: 50px !important;
+    height: 50px !important;
+  }
+}
+.chatAvatar {
+  width: 50px !important;
+  height: 50px !important;
+}
+.textField {
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  border-radius: 4px;
+}
+.textFieldContainer {
+  background-color: rgb(242, 242, 242);
+  padding: 15px 0 15px 0;
+  position: sticky;
+  bottom: 0px;
+}
+.attachButton {
+  width: 40px !important;
+  height: 40px !important;
+  margin: 8px 0px 0px 0px !important;
+}
+.sendButton {
+  width: 120px !important;
+  height: 40px !important;
+  margin: 8px 0px 0px 0px !important;
+}
+.username {
+  color: rgba(0, 0, 0, 0.54);
+}
