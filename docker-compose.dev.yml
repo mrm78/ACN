@@ -6,9 +6,9 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASS}
 
   web:
     build: 
@@ -19,12 +19,23 @@ services:
     env_file:
       - ./docker/back/backend.env
     volumes: 
-      - ./ACN_backend_service
+      - ./ACN_backend_service:/app
     command: ./scripts/run.sh
     network_mode: host
     depends_on:
       - db
-  
+
+  frontend:
+    build: 
+      context: .
+      dockerfile: ./docker/front/Dockerfile
+    container_name: frontend
+    restart: unless-stopped
+    volumes: 
+      - ./ACN_frontend_service:/app
+    command: npm start
+    network_mode: host
+
   swagger:
     image: swaggerapi/swagger-ui
     container_name: swagger
