@@ -1,4 +1,5 @@
 DataBase
+data
 docker/back/backend.env
 docker/front/frontend.env
 .env
