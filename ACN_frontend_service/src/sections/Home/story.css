@@ -1,0 +1,36 @@
+.profile2 {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 100%;
+    margin: 0 auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(110deg, #fdcc3b 60%, rgb(54, 54, 54) 60%);
+  }
+  .img3 {
+    position: relative;
+    z-index: 10;
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 100%;
+  }
+  @media only screen and (max-width: 500px){
+
+    .profile2{
+        
+        width: 60px;
+        height: 60px;
+        padding: 3px;
+    }
+    .img3{
+        width: 54px !important;
+        height: 54px !important;
+
+    }}
+
+    .swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets{
+      bottom: -5px !important;
+    }

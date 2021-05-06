@@ -1,0 +1,466 @@
+
+.loz2{
+    position:absolute;
+    right:-2vw;
+    z-index: 18;
+    bottom:-10vw;
+    height: 20vw;
+    width: 20vw;
+    min-width: 140px;
+    min-height: 140px;
+    transform:rotate(45deg);
+    padding: 0;
+}
+
+@media only screen and (max-width: 700px){
+    .loz2{
+        bottom: -70px;
+    }
+}
+
+@media only screen and (max-width: 500px){
+    .loz2{
+        bottom: -10vw;
+        transform:translate(0 ,-30%)rotate(135deg);
+}
+
+    .slozac11{
+    transform: rotate(-90deg);
+}
+    .slozac21{
+    transform: rotate(-90deg);
+}
+    .slozac31{
+    transform: rotate(-90deg);
+}
+    .slozac4{
+    transform: rotate(-90deg)  
+}}
+
+
+ul{
+    margin: 0;
+    padding: 0;
+    display: block;
+    list-style: none;
+    position: relative;
+    
+}
+.smain_loz{
+    width: 100%;
+    height: 100%;
+    
+}
+.slozac1{
+    display: list-item;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+
+    top:0;
+    left: 0;
+    right: auto;
+    bottom:auto;
+    margin: 0;
+    z-index: 11;
+}
+.slozac2{
+    display: list-item;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top:0;
+    left: auto;
+    right: 0;
+    bottom: auto;
+    margin: 0;
+}
+.slozac3{
+    display: list-item;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: auto;
+    left: auto;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+}
+.slozac4{
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: rgb(54, 54, 54);
+    display: list-item;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: auto;
+    left: -0.2vw;
+    right: auto;
+    bottom: -0.2vw;
+    z-index: 10;
+}
+.slozac11{
+    transition: all .4s;
+    transition-timing-function: ease;
+    margin: -0.2vw;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color:rgb(0, 90, 207);
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+}
+.slozac21{
+    overflow: hidden;
+    transition: all .4s;
+    transition-timing-function: ease;
+    border-radius: 4px;
+    margin: -0.2vw;
+    background-color:rgb(0, 90, 207);
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: auto;
+    right: 50%;
+    bottom: auto; 
+}
+.slozac31{
+    overflow: hidden;
+    transition: all .4s;
+    transition-timing-function: ease;
+    border-radius: 4px;
+    margin: -0.2vw;
+    background-color:rgb(0, 90, 207);    
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: auto;
+    left: auto;
+    right: 50%;
+    bottom: 50%; 
+}
+@keyframes down {
+    0% {
+      opacity: 0;
+      bottom: 20%;
+      right: 20%;
+    }
+    50%{
+        opacity: 1;
+        bottom: 10%;
+        right: 10%;
+    }
+
+    100%{
+        opacity: 0;
+        bottom: 20%;
+        right: 20%;
+    }
+  }
+  @keyframes scaleDown {
+    0% {
+      width: 100%;
+      height: 100%;
+    }
+    100%{
+        width: 50%;
+        height: 50%;
+    }
+  }
+
+  .sD_label1{
+
+      color: rgb(240, 240, 240);
+    position: absolute;
+    bottom: 23%;
+    right: 3%;
+  transform: rotate(-45deg);
+    }
+    .sD_label2{
+        color: rgb(240, 240, 240);
+      position: absolute;
+      bottom: 24%;
+      right: 4%;
+    transform: rotate(-45deg);
+      }
+    .sD_label21{
+      color:rgb(240, 240, 240);
+      position: absolute;
+      bottom: 24%;
+      right: 23%;
+    transform: rotate(-45deg);
+      }
+      .sD_label3{
+        color:rgb(240, 240, 240);
+      position: absolute;
+      bottom: 14%;
+      right: 14%;
+    transform: rotate(-45deg);
+      }
+  .stitle{
+    text-align: center;
+    transition: all .2s linear;
+    width: 100%;
+    height: 100%;
+    transform: scale(.8) rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: collapse;
+    opacity: 0;
+    color: white;
+
+  }
+  .sbg1{
+    transition: all .2s ease-in;
+    background-image: url("../Landingpage/1.png");
+    background-position: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: scale(.8) rotate(-45deg);
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+  .sbg2{
+    transition: all .2s ease-in;
+    top: 0;
+    left: 0;
+    background-image: url("../../static/up.png");
+    background-position: center;
+    background-size: cover;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: scale(.7) rotate(-45deg);
+    background-repeat: no-repeat;
+}
+.sbg3{
+    transition: all .2s ease-in;
+    top: 0;
+    left: 0;
+    position: absolute;
+    background-image: url("../../static/add.png");
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    transform: scale(.8) rotate(-45deg);
+    background-repeat: no-repeat;
+}
+  .slozac11:hover>.sbg1{
+  opacity: 0;
+  visibility: collapse;
+  transform: scale(.8) rotate(-45deg);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.slozac11:hover>.stitle{
+    visibility: visible;
+    opacity: 1;
+  }
+
+.slozac21:hover>.sbg2{
+    opacity: 0;
+    visibility: collapse;
+    transform: scale(.6) rotate(-45deg);
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .slozac21:hover>.stitle{
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .slozac31:hover>.sbg3{
+    opacity: 0;
+    visibility: collapse;
+    transform: scale(.8) rotate(-45deg);
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+.slozac11:hover>.MuiSvgIcon-root{
+    animation-name: down;
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+}
+.slozac21:hover>.MuiSvgIcon-root{
+    animation-name: down;
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+}
+.slozac31:hover>.MuiSvgIcon-root{
+    animation-name: down;
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+}
+.slozac31:hover>.stitle{
+  visibility: visible;
+  opacity: 1;
+}
+  .slozac11:hover{
+
+    background-color: #ffc107f3;
+      width: 104.5%;
+      height: 104.5%;
+      z-index: 15;
+      cursor: grab;
+  }
+  .slozac21:hover{
+    background-color: #ffc107f3;
+    cursor: grab;
+    animation-name: scaleUp;
+    animation-timing-function: ease;
+    animation-duration: .4s;
+    width: 104.5%;
+    height: 104.5%;
+    z-index: 15;
+
+}
+.slozac31:hover{
+    background-color: #ffc107f3;
+    cursor: grab;
+    animation-name: scaleUp;
+    animation-timing-function: ease;
+    animation-duration: .4s;
+    width: 104.5%;
+    height: 104.5%;
+    z-index: 15;
+
+}
+
+.sslider{
+    width: 100%;
+    height: 100%;
+    transform: rotate(-45deg)scale(1.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    
+}
+.outer {
+  
+    position: relative;
+    width: 65px;
+    cursor: pointer;
+  }
+
+  @media only screen and (max-width: 1000px){
+    .outer{
+      width: 35px;
+    }
+}
+  
+  .inner {
+    width: inherit;
+    text-align: center;
+  }
+  
+  .hh { 
+    font-size: .6em; 
+    line-height: 1.5em;
+    text-transform: uppercase;
+    color: #fff;
+    transition: all .3s ease-in;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .inner:before, .inner:after {
+    position: absolute;
+    content: '';
+    height: 1px;
+    width: inherit;
+    background: #FFC107;
+    left: 0;
+    transition: all .3s ease-in;
+  }
+  
+  .inner:before {
+    top: 50%; 
+    transform: rotate(45deg);  
+  }
+  
+  .inner:after {  
+    bottom: 50%;
+    transform: rotate(-45deg);  
+  }
+  
+  .outer:hover .hh {
+    opacity: 1;
+  }
+  
+  .outer:hover .inner:before,
+  .outer:hover .inner:after {
+    transform: rotate(0);
+  }
+  
+  .outer:hover .inner:before {
+    top: 0;
+  }
+  
+  .outer:hover .inner:after {
+    bottom: 0;
+  }
+
+.sslider2{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    position: relative;
+}
+.carousel-inner{
+    height: 100%;
+    border-radius: 10px;
+}
+
+.carousel-indicators{
+    left: -41%;
+    right: auto;
+    bottom: 17%;
+    transform: rotate(-90deg);
+    top:auto;
+    position: absolute;
+}
+.carousel-indicators li{
+    cursor: grab;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    opacity: .6;
+    border-radius: 6px;
+    height: 30px;
+}
+.carousel-indicators .active{
+    opacity: 1;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border-radius: 6px;
+    
+    height: 35px;
+    width: 35px;
+    top: -8px;
+    display: inline;
+ 
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,12 @@
+[run]
+ branch = True
+ source = .
+ omit =
+  ACN2/*
+  */migrations/*
+  */apps.py
+  */__init__.py
+  */tests.py
+  */tests/*
+  */urls.py
+  manage.py

@@ -1,0 +1,546 @@
+body{
+    background-color:rgb(231, 231, 231);
+    height: 100%;
+    margin: 0;
+    
+}
+
+
+.body_bg{
+    position: relative;
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    background-image: url(bg2.jpg);
+    position: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.vasat{
+    position: absolute;
+    left: 50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+}
+.MuiSvg{
+    color: rgb(240, 240, 240);
+    opacity: 0;
+    position: absolute;
+    bottom: 20%;
+    right: 20%;
+  height: 10em;
+  width: 10em;
+  transform: rotate(-45deg);
+}
+
+.loz{
+    height: 45rem;
+    width: 45rem;
+    margin: 0 auto;
+    transform:translate(130px ,0)rotate(45deg);
+    padding: 0;
+}
+.logo{
+    position: absolute;
+    top: 0;
+    margin-bottom: -150px;
+}
+.header{
+    width: 260px;
+    height: 130px;
+    background-image: url(head1.png);
+    background-position: center;
+    position: absolute;
+    top: 0;
+}
+.footerr{
+    position: fixed;
+    bottom: -620px;
+    left: -150px;
+    transform: rotate(45deg);
+    width: 600px;
+    height: 600px;
+    background-color: rgb(255, 255, 255);
+    transition: all .3s;
+    transition-timing-function: ease;
+    
+}
+.footer1{
+    background-image: url(Create.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    z-index:1301;
+    position: fixed;
+    bottom: -500px;
+    left: -150px;
+    transform: rotate(45deg);
+    width: 600px;
+    height: 600px;
+    background-color: rgb(255, 255, 255);
+    transition: all .3s;
+    transition-timing-function: ease;
+    
+}
+@media only screen and (max-width: 1200px){
+    .loz{
+        transform:translate(110px ,0) scale(.87) rotate(45deg);
+    }}
+@media only screen and (max-width: 900px){
+    .loz{
+        transform:translate(90px ,0) scale(.7) rotate(45deg);
+}
+}
+@media only screen and (max-width: 500px){
+    .loz{
+        transform:translate(0 ,14%)scale(.6) rotate(135deg);
+}
+    .footerr{
+        transform: rotate(45deg) scale(0.9);
+        left: -200px;
+    }
+    .footer1{
+        left: -200px;
+    }
+    .header{
+        width: 500px;
+    height: 60px;
+    background-image: none;
+    }
+    .lozac11{
+    transform: rotate(-90deg);
+}
+    .lozac21{
+    transform: rotate(-90deg);
+}
+    .lozac31{
+    transform: rotate(-90deg);
+}
+    .lozac4{
+    transform: rotate(-90deg)  
+}}
+@media only screen and (max-width: 400px){
+    .loz{
+
+        transform:translate(0 ,130px) scale(.575) rotate(135deg);
+        
+}
+.header{
+    width: 500px;
+height: 60px;
+background-image: none;
+}
+.footerr{
+    transform: rotate(45deg) scale(0.9);
+    left: -220px;
+}
+.footer1{
+    left: -200px
+}
+    .lozac11{
+    transform: rotate(-90deg);
+}
+    .lozac21{
+    transform: rotate(-90deg);
+}
+    .lozac31{
+    transform: rotate(-90deg);
+}
+    .lozac4{
+     transform: rotate(-90deg) ; 
+}
+}
+
+ul{
+    margin: 0;
+    padding: 0;
+    display: block;
+    list-style: none;
+    position: relative;
+    
+}
+.main_loz{
+    width: 100%;
+    height: 100%;
+    
+}
+.lozac1{
+    display: list-item;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+
+    top:0;
+    left: 0;
+    right: auto;
+    bottom:auto;
+    margin: 0;
+    z-index: 11;
+}
+.lozac2{
+    display: list-item;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top:0;
+    left: auto;
+    right: 0;
+    bottom: auto;
+    margin: 0;
+}
+.lozac3{
+    display: list-item;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: auto;
+    left: auto;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+}
+.lozac4{
+    border-radius: 10px;
+    background-color: beige;
+    display: list-item;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: auto;
+    left: -1.5px;
+    right: auto;
+    bottom: -1.5px;
+    z-index: 10;
+}
+.lozac11{
+    transition: all .4s;
+    transition-timing-function: ease;
+    margin: -1.5px;
+    border-radius: 10px;
+    background-color: rgb(80, 80, 80);
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+}
+.lozac21{
+    transition: all .4s;
+    transition-timing-function: ease;
+    border-radius: 10px;
+    margin: -1.5px;
+    background-color: rgb(80, 80, 80);
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: auto;
+    right: 50%;
+    bottom: auto; 
+}
+.lozac31{
+    transition: all .4s;
+    transition-timing-function: ease;
+    border-radius: 10px;
+    margin: -1.5px;
+    background-color: rgb(80, 80, 80);    
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: auto;
+    left: auto;
+    right: 50%;
+    bottom: 50%; 
+}
+@keyframes down {
+    0% {
+      opacity: 0;
+      bottom: 20%;
+      right: 20%;
+    }
+    50%{
+        opacity: 1;
+        bottom: 10%;
+        right: 10%;
+    }
+
+    100%{
+        opacity: 0;
+        bottom: 20%;
+        right: 20%;
+    }
+  }
+  @keyframes scaleDown {
+    0% {
+      width: 100%;
+      height: 100%;
+    }
+    100%{
+        width: 50%;
+        height: 50%;
+    }
+  }
+  .MiuSvg{
+      color: rgb(240, 240, 240);
+  }
+  .D_label1{
+      font-size: 1.5rem;
+      color: rgb(240, 240, 240);
+    position: absolute;
+    bottom: 23%;
+    right: 3%;
+  transform: rotate(-45deg);
+    }
+    .D_label2{
+        color: rgb(240, 240, 240);
+      position: absolute;
+      bottom: 24%;
+      right: 4%;
+    transform: rotate(-45deg);
+      }
+    .D_label21{
+      color:rgb(240, 240, 240);
+      position: absolute;
+      bottom: 24%;
+      right: 23%;
+    transform: rotate(-45deg);
+      }
+      .D_label3{
+        color:rgb(240, 240, 240);
+      position: absolute;
+      bottom: 14%;
+      right: 14%;
+    transform: rotate(-45deg);
+      }
+  .bg1{
+      position: absolute;
+    bottom: 7%;
+    right: 7%;
+  width: 100%;
+  height: 100%;
+  transform: scale(.8) rotate(-45deg);
+  background-image: url(6.gif);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  }
+  .bg2{
+    position: absolute;
+  bottom: 10%;
+  right: 10%;
+width: 100%;
+height: 100%;
+transform: scale(.5) rotate(-45deg);
+background-image: url(1.png);
+
+background-position: center;
+background-repeat: no-repeat;
+}
+.bg3{
+    position: absolute;
+  bottom: 7%;
+  right: 7%;
+width: 100%;
+height: 100%;
+transform: scale(.5) rotate(-45deg);
+background-image: url(2.png);
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+}
+  .lozac11:hover>.bg1{
+  background-image: url(3.gif);
+  transform: scale(.8) rotate(-45deg);
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.lozac11:hover>.D_label1{
+    right: 11%;
+  }
+
+.lozac21:hover>.bg2{
+    background-image: url(4.gif);
+    transform: scale(.6) rotate(-45deg);
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .lozac21:hover>.D_label2{
+    right: 11%;
+  }
+
+  .lozac31:hover>.bg3{
+    background-image: url(5.gif);
+    transform: scale(.8) rotate(-45deg);
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+.lozac11:hover>.MuiSvgIcon-root{
+    animation-name: down;
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+}
+.lozac21:hover>.MuiSvgIcon-root{
+    animation-name: down;
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+}
+.lozac31:hover>.MuiSvgIcon-root{
+    animation-name: down;
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+}
+.lozac31:hover>.D_label3{
+    bottom: 17%;
+      right: 16%;
+}
+  .lozac11:hover{
+
+    background-color: rgb(240, 128, 128, .9);
+      width: 101%;
+      height: 101%;
+      z-index: 15;
+      cursor: grab;
+  }
+  .lozac21:hover{
+    background-color: rgb(240, 128, 128, .9);
+    cursor: grab;
+    animation-name: scaleUp;
+    animation-timing-function: ease;
+    animation-duration: .4s;
+    width: 101%;
+    height: 101%;
+    z-index: 15;
+
+}
+.lozac31:hover{
+    background-color: rgb(240, 128, 128, .9);
+    cursor: grab;
+    animation-name: scaleUp;
+    animation-timing-function: ease;
+    animation-duration: .4s;
+    width: 101%;
+    height: 101%;
+    z-index: 15;
+
+}
+
+.slider{
+    width: 100%;
+    height: 100%;
+    
+    
+    z-index: 1;
+    
+}
+
+.slider2{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    position: relative;
+}
+.carousel-inner{
+    height: 100%;
+    border-radius: 10px;
+}
+
+.carousel-indicators{
+    left: -41%;
+    right: auto;
+    bottom: 17%;
+    transform: rotate(-90deg);
+    top:auto;
+    position: absolute;
+}
+.carousel-indicators li{
+    cursor: grab;
+    background-image: url(slide.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    opacity: .6;
+    border-radius: 6px;
+    height: 30px;
+}
+.carousel-indicators .active{
+    opacity: 1;
+    background-image: url(slide2.gif);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border-radius: 6px;
+    
+    height: 35px;
+    width: 35px;
+    top: -8px;
+    display: inline;
+ 
+}
+
+
+.footLoz{
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 40px;
+    width: 40px;
+    background-color: rgb(22, 22, 22);
+}
+.bgb{
+    display: none;
+}
+.bgb1{
+    position: absolute; 
+    z-index: 1300;
+    background-color: rgb(0, 0, 0 , .8);
+    height: 100%;
+    width: 100%;
+}
+.cool{
+    display: none;
+}
+.cool1{
+    
+    position: absolute;
+    transform: rotate(-45deg);
+    top: 18%;
+    left: 13%;
+    font-size: 30px;
+}
+.bala{
+    position: absolute;
+    transform: rotate(-135deg);
+    top: 2%;
+    left: 15%;
+    height: 20px;
+    width: 10px;
+    background-image: url(bala.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.payin{
+    position: absolute;
+    transform: rotate(45deg);
+    bottom:2%;
+    right: 12%;
+    height: 20px;
+    width: 10px;
+    background-image: url(payin.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+
+
