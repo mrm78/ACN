@@ -75,6 +75,7 @@ const useStyle = makeStyles((theme) => ({
 //     "aria-controls": `full-width-tabpanel-${index}`,
 //   };
 // }
+// halet chijoore
 
 export default function Landingpage() {
   const history = useHistory();
@@ -110,6 +111,7 @@ export default function Landingpage() {
           console.log(res.data);
           setValues(res.data);
           setIsLogedin(true);
+
         });
     }
   };
