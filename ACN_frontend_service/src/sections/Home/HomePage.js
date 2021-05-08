@@ -20,6 +20,7 @@ import { useHistory } from "react-router-dom";
 import loz from "./Loz"
 import Story from "./Story"
 import Community from "./Community"
+import EditEvent from "../Create-Community/CreateCommunity"
 
 const theme = createMuiTheme({
     palette: {
@@ -35,7 +36,7 @@ const theme = createMuiTheme({
 
 
 export default function Home() {
-
+    const [isDialogOpen, setDialogOpen] = useState(false);
     const [userinfo,setUserinfo] = useState(null);
     const [MyC,setMyC] = useState(null);
     const [value, setValue] = React.useState(0);
@@ -51,11 +52,22 @@ export default function Home() {
       }
       setTab(Tab_items)
     }
+    const handleDialogClose = () => {
+      setDialogOpen(false);
+    };
 
+    const handleDialogOpen = () => {
+      setDialogOpen(true);
+    };
+
+    const handleLogout = () => {
+      localStorage.removeItem("token");
+      window.location.href='/'
+    };
     useEffect(() => {
         // setLoader(true);
         if (localStorage.getItem("token") == null) {
-          history.push('/')
+          window.location.href = "/"
         } else {
           axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
           const formData = new FormData();
@@ -112,7 +124,56 @@ export default function Home() {
       {!Loader ? (
         <div className="Home_main">
             <div className="h_header">
-                {loz}
+                
+
+                                <div className="loz2">
+                    <ul className="smain_loz">
+                    <li className="slozac1">
+                    <ul className="smain_loz" >
+                    <li className="slozac11">
+                    <div className="stitle"><h5>Profile Edits</h5></div>
+                    <div className="sbg1"></div>
+                    <p className="ffont sD_label1"></p>
+
+                    </li>
+                    </ul>
+                    </li>
+                    <li className="slozac2">
+                    <ul className="smain_loz">
+                    <li
+                    className="slozac21"
+
+                    >
+                    <div className="stitle"><h6>Up Comming Events</h6></div>
+                    <div className="sbg2"></div>
+                    <p className= "ffont sD_label21">
+
+                    </p>
+
+                    </li>
+                    </ul>
+                    </li>
+                    <li className="slozac3">
+                    <ul className="smain_loz">
+                    <li className="slozac31" onClick={() => handleDialogOpen()}>
+                    <div className="stitle"><h6>Create Commiunity</h6></div>
+                    <div className="sbg3"></div>
+                    <p className="ffont sD_label3"></p>
+
+                    </li>
+                    </ul>
+                    </li>
+                    <li className="slozac4" onClick={() => handleLogout()}>
+                    <div className="sslider">
+                    <div class="outer">
+                      <div class="inner">
+                        <label class="hh">Exit</label>
+                      </div>
+                    </div>
+                    </div>
+                    </li>
+                    </ul>
+                    </div>
                 
                 <div className="profpage">
                     <div className="profile">
@@ -153,6 +214,7 @@ export default function Home() {
                         </Grid>
             
             </div>
+            <EditEvent state={isDialogOpen} onClose={handleDialogClose}/>
         </div>
           ) : (<Backdrop classes={{
             root:{

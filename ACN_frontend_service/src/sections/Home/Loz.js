@@ -2,6 +2,8 @@ import React, { Useh, useState } from "react";
 import { useHistory } from "react-router-dom";
 import "./loz.css"
 
+
+
 const handleLogout = () => {
   localStorage.removeItem("token");
   window.location.href='/'
