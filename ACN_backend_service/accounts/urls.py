@@ -7,4 +7,5 @@ urlpatterns = [
     path('login', login.as_view()),
     path('resend_verification_code', resend_verification_code.as_view()),
     path('is_login', is_login.as_view()),
+    path('myself_info', myself_info.as_view()),
 ]

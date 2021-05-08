@@ -16,3 +16,12 @@ class UserModelTest(APITestCase):
     def test_user_str(self):
         user = User.objects.get(username='testuser')
         self.assertEqual(user.__str__(), user.username)
+
+    def test_pretty_gender(self):
+        user = User.objects.get(username='testuser')
+        user.gender = True
+        user.save()
+        self.assertEqual(user.pretty_gender(), 'male')
+        user.gender = False
+        user.save()
+        self.assertEqual(user.pretty_gender(), 'female')
