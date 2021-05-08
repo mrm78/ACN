@@ -214,7 +214,7 @@ export default function Home() {
                         </Grid>
             
             </div>
-            <EditEvent state={isDialogOpen} onClose={handleDialogClose}/>
+            <EditEvent state={isDialogOpen} handleClose={handleDialogClose}/>
         </div>
           ) : (<Backdrop classes={{
             root:{

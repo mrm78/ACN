@@ -144,7 +144,7 @@ export default function Signup() {
           if (res.data.status === "success") {
             setValues({ ...values, isSignedUp: true });
             localStorage.setItem("token", res.data.token);
-            history.push('/home');
+            // history.push('/home');
           } else {
             if (res.data.error === "not available email") {
               setAlertMessage("Email is already used.");
