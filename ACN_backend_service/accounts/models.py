@@ -31,3 +31,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def pretty_gender(self):
+        return 'male' if self.gender else 'female'
