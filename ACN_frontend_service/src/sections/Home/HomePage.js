@@ -55,7 +55,7 @@ export default function Home() {
     useEffect(() => {
         // setLoader(true);
         if (localStorage.getItem("token") == null) {
-          history.push("/");
+          history.push('/')
         } else {
           axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
           const formData = new FormData();
@@ -103,7 +103,7 @@ export default function Home() {
         if (MyC != null) {
           setLoader(false);
         }
-        setTab(<div ><Community MyC={MyC}/></div>)
+        setTab(<div data-testid="tab0"><Community MyC={MyC}/></div>)
       }, [MyC,userinfo]);
 
 

@@ -3,6 +3,10 @@
   "jest": {
     "coveragePathIgnorePatterns": [
       "<rootDir>/src/static/"
+    ],
+    "coverageReporters": [
+      "html",
+      "text-summary"
     ]
   },
   "version": "0.1.0",
