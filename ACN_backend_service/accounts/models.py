@@ -14,6 +14,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    username = models.CharField(max_length=25, unique=True, primary_key=True)
     email = models.EmailField(unique=True)
     verified_email = models.BooleanField(default=False)
     verification_code = models.IntegerField(null=True, blank=True)
@@ -31,6 +32,9 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def short_info(self):
+        return {'username':self.username, 'avatar':self.avatar.url if self.avatar else None}
 
     def pretty_gender(self):
         return 'male' if self.gender else 'female'

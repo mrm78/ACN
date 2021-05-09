@@ -9,9 +9,9 @@ class TagSerializer(serializers.ModelSerializer):
 class CommunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Community
-        fields = ['id', 'title', 'description', 'tags', 'creation_date']
+        fields = ['id', 'title', 'description', 'creation_date', 'image', 'creator_info', 'tags_info']
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ['id', 'title', 'description', 'community', 'creator', 'creation_date']
+        fields = ['id', 'title', 'description', 'community','image', 'creation_date', 'begin_time', 'creator_info']
