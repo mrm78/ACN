@@ -155,3 +155,25 @@ class UserTest(APITestCase):
         # test invalid username
         response = self.client.post('/account/resend_verification_code', data={'username':'invalid'}).json()
         self.assertEqual(response.get('error'), 'invalid username')
+
+    def test_myself_info(self):
+        # create user
+        user = User.objects.create_user(
+            username='testuser',
+            email='testuser@acn.com',
+            name='test',
+            password='123456789',
+        )
+        user.gender = True
+        user.age = 20
+        user.save()
+        token = Token.objects.create(user=user)
+
+        # test user_info
+        response = self.client.get('/account/myself_info', HTTP_AUTHORIZATION=f'Token {token.key}').json()
+        self.assertEqual(response.get('username'), 'testuser')
+        self.assertEqual(response.get('name'), 'test')
+        self.assertEqual(response.get('email'), 'testuser@acn.com')
+        self.assertEqual(response.get('pretty_gender'), 'male')
+        self.assertEqual(response.get('age'), 20)
+        

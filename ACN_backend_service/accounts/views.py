@@ -10,6 +10,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import re, random
 from django.utils import timezone
+from .serializers import *
 
 
 
@@ -102,3 +103,10 @@ class is_login(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, req):
         return Response({'status':'yes'})
+
+
+class myself_info(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, req):
+        user = SelfUserSerializer(req.user)
+        return Response(user.data)

@@ -4,22 +4,38 @@ class Community(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()
     tags = models.ManyToManyField('communities.Tag')
+    image = models.ImageField(upload_to='communities', null=True, blank=True)
     participants = models.ManyToManyField('accounts.User', related_name='joined_communities')
     creator = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='created_communities')
     creation_date = models.DateTimeField(auto_now=True)
 
+    def creator_info(self):
+        return self.creator.short_info()
+
+    def tags_info(self):
+        return [tag.info() for tag in self.tags.all()]
+
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=20)
+
+    def info(self):
+        return {'id':self.id, 'name':self.name}
 
 
 class Event(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()
     community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='events', null=True, blank=True)
     creator = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='created_events')
     participants = models.ManyToManyField('accounts.User', related_name='joined_events')
+    begin_time = models.DateTimeField(auto_now=True)
     creation_date = models.DateTimeField(auto_now=True)
+
+    def creator_info(self):
+        return self.creator.short_info()
 
 
 class Post(models.Model):
