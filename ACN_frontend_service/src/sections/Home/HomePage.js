@@ -37,7 +37,7 @@ const theme = createMuiTheme({
 
 export default function Home() {
     const [isDialogOpen, setDialogOpen] = useState(false);
-    const [userinfo,setUserinfo] = useState(null);
+    const [userinfo,setUserinfo] = useState({Avatar:'',name:'',username:''});
     const [MyC,setMyC] = useState(null);
     const [value, setValue] = React.useState(0);
     const [Loader, setLoader] = useState(true);
@@ -76,7 +76,7 @@ export default function Home() {
           axios.get(`${Const.baseUrl}/account/myself_info`).then((response) => {
             setUserinfo(response.data);
           });
-          axios.get(`${Const.baseUrl}/community/all_community`, formData).then((res) => {
+          axios.get(`${Const.baseUrl}/community/all_communities`, formData).then((res) => {
                    
             setMyC(res.data);
             
