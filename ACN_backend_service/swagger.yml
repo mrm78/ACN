@@ -704,7 +704,46 @@ paths:
                 type: string
                 example: invalid community id
 
-
+  /community/community_participants:
+    get:
+      tags:
+        - Community
+      summary: participants of a community (also creator of community)
+      description: get id of a community and return participants
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: community info
+        schema:
+          type: object
+          required:
+          - community_id
+          properties:
+            community_id:
+              type: string
+              example: 5
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: array
+            items:
+              type: object
+              example: {'id':1, 'name':'mohamad', 'username':'mrm78', 'bio':'...', 'avatar':'<url>'}
+        200-2:
+          description: failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid community id
   
 
 
