@@ -6,3 +6,8 @@ class SelfUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'name', 'username', 'email', 'bio', 'pretty_gender', 'age', 'avatar']
+
+class OtherUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'username', 'bio', 'avatar']

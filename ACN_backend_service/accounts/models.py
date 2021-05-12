@@ -14,7 +14,6 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    username = models.CharField(max_length=25, unique=True, primary_key=True)
     email = models.EmailField(unique=True)
     verified_email = models.BooleanField(default=False)
     verification_code = models.IntegerField(null=True, blank=True)

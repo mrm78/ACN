@@ -261,9 +261,7 @@ paths:
       - in: header
         name: Authorization or HTTP_AUTHORIZATION
         required: true
-        type: string
-        
-        
+        type: string  
       responses:
         200:
           description: success
@@ -290,6 +288,125 @@ paths:
                 type: string
                 example: Invalid token.
       
+
+  /account/update_user_info:
+    post:
+      tags:
+        - Account
+      summary: Update User Info
+      description: The user can update the info here
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: UpdateInfo
+        schema:
+          type: object
+          properties:
+            username:
+              type: string
+              example: acn_account
+            name:
+              type: string
+              example: 'new name'
+            avatar:
+              example: this field is FILE (you can put 'delete' string for this field to delete user avatar)
+            email:
+              type: string
+              format: email
+              example: your@email.com
+            age:
+              type: string
+              example: 20
+            gender:
+              type: string
+              example: male or female
+            old_password:
+              type: string
+              example: '1234'
+            new_password:
+              type: string
+              example: 'new password'
+            bio:
+              type: string
+              example: "I'm so good!"
+      responses:
+        200-1:
+          description: success (the avatar field is a link)
+          schema:
+            type: object
+            properties:
+              id:
+                type: int
+                example: 2
+              name:
+                type: string
+                example: name
+              email:
+                type: string
+                format: email
+                example: your@email.com
+              age:
+                type: int
+                example: 20
+              gender:
+                type: string
+                example: man
+              avatar:
+                type: url
+                example: "/media/avatars/me.jpg"
+              username:
+                type: string
+                example: acn_account
+              bio:
+                type: string
+                example: "I'm so good!!"
+        200-3:
+          description: failed, the new username should be available
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: not available username
+        200-4:
+          description: failed, the new email should be available
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: not available email
+        200-5:
+          description: failed, the old password should be correct
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid old password
+        200-6:
+          description: failed, the new password shouldn't be empty or null
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid new password
 
 
 

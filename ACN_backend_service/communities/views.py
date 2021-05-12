@@ -1,5 +1,8 @@
+#from ACN_backend_service.accounts.serializers import OtherUserSerializer
+#from ACN_backend_service.communities.models import Community
 from communities.models import *
 from communities.serializers import *
+from accounts.serializers import *
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
@@ -99,3 +102,12 @@ class community_events(APIView):
         c_events = Event.objects.filter(community=community[0])
         c_events = EventSerializer(c_events, many=True)
         return Response(c_events.data)
+
+class community_participants(APIView):
+    def get(self, req):
+        community = Community.objects.filter(req.GET['community_id'])
+        if not community:
+            return Response({'status':'failed', 'error':'invalid community id'})
+        users = community.participants.all()
+        users = OtherUserSerializer(users, many=True)
+        return Response(users.data)
