@@ -93,6 +93,7 @@ class create_event(APIView):
             title=req.POST['title'],
             description=req.POST['description'],
             creator=req.user,
+            image=req.FILES.get('image'),
             community=community[0],
             begin_time=begin_time
         )
