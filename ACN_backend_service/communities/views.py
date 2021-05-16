@@ -1,4 +1,3 @@
-from django.http.response import ResponseHeaders
 from communities.models import *
 from communities.serializers import *
 from accounts.serializers import *
@@ -162,3 +161,32 @@ class join_event(APIView):
             return Response({'status':'failed', 'error':'already a member'})
         event[0].participants.add(req.user)
         return Response({'status':'success'})
+
+class create_post(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        community = Community.objects.filter(id=req.POST['community_id'])
+        if not community:
+            return Response({'status':'failed', 'error':'invalid community id'})
+        if req.user not in community[0].participants.all() and req.user != community[0].creator:
+             return Response({'status':'failed', 'error':'permission denied'})
+        if not req.FILES.get('image'):
+            return Response({'status':'failed', 'error':'no image'})
+        post = Post.objects.create(
+            caption=req.POST['caption'],
+            image = req.FILES.get('image'),
+            user = req.user,
+            community = community[0]
+        )
+        return Response({'status':'success', 'id':post.id})
+
+class community_posts(APIView):
+    def get(self, req):
+        community = Community.objects.filter(id=req.GET['community_id'])
+        if not community:
+            return Response({'status':'failed', 'error':'invalid community id'})
+        posts = community[0].post_set.all()
+        posts = PostSerializer(posts, many=True).data
+        return Response(posts)
+        
+        

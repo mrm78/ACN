@@ -14,4 +14,6 @@ urlpatterns = [
     path('join_community', join_community.as_view()),
     path('leave_community', leave_community.as_view()),
     path('join_event', join_event.as_view()),
+    path('create_post', create_post.as_view()),
+    path('community_posts', community_posts.as_view()),
 ]

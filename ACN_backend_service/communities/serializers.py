@@ -30,3 +30,8 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = ['id', 'title', 'description', 'number_of_participants', 'community','image', 'creation_date', 'begin_time', 'creator_info']
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['id', 'caption', 'image', 'date', 'creator_info']

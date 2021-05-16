@@ -7,7 +7,7 @@ class Community(models.Model):
     image = models.ImageField(upload_to='communities', null=True, blank=True)
     participants = models.ManyToManyField('accounts.User', related_name='joined_communities')
     creator = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='created_communities')
-    creation_date = models.DateTimeField(auto_now=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
 
     def creator_info(self):
         return self.creator.short_info()
@@ -34,8 +34,8 @@ class Event(models.Model):
     image = models.ImageField(upload_to='events', null=True, blank=True)
     creator = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='created_events')
     participants = models.ManyToManyField('accounts.User', related_name='joined_events')
-    begin_time = models.DateTimeField(auto_now=True)
-    creation_date = models.DateTimeField(auto_now=True)
+    begin_time = models.DateTimeField(auto_now_add=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
 
     def creator_info(self):
         return self.creator.short_info()
@@ -47,5 +47,19 @@ class Event(models.Model):
 class Post(models.Model):
     image = models.ImageField(upload_to='posts')
     caption = models.TextField()
+    community = models.ForeignKey(Community, on_delete=models.CASCADE)
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='created_posts')
+    date = models.DateTimeField(auto_now_add=True)
+    likes = models.ManyToManyField('accounts.User', related_name='liked_posts')
+
+    def creator_info(self):
+        return self.user.short_info()
+
+class Post_comment(models.Model):
+    text = models.TextField()
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def creator_info(self):
+        return self.user.short_info()

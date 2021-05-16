@@ -956,3 +956,120 @@ paths:
               error:
                 type: string
                 example: permission denied
+
+  /community/create_post:
+    post:
+      tags:
+        - Community
+      summary: create a new post
+      description: users can create a new post
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: community info
+        schema:
+          type: object
+          required:
+          - caption
+          - image
+          - community_id
+          properties:
+            caption:
+              type: string
+              example: call of duty
+            image:
+              type: string
+              example: FILE
+            community_id:
+              type: string
+              example: 5
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              id:
+                type: int
+                example: 5
+        200-2:
+          description: failed -> image
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: no image
+        200-3:
+          description: failed -> invalid community id
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid community id
+        200-4:
+          description: failed -> permission denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: permission denied
+
+  /community/community_posts:
+    get:
+      tags:
+        - Community
+      summary: a
+      description: a
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: community info
+        schema:
+          type: object
+          required:
+          - community_id
+          properties:
+            community_id:
+              type: string
+              example: 5
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: array
+            items:
+              type: object
+              example: {'id':1, 'caption':'...', 'image':'<url>', 'date':'...','creator_info':{'username':'mrm78','avatar':'<url>'}}
+        200-2:
+          description: failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid community id
+  
