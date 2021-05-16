@@ -409,6 +409,48 @@ paths:
                 example: invalid new password
 
 
+  /account/myself_info:
+    post:
+      tags:
+        - Account
+      summary: Login User
+      description: The user can login here
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 2
+              name:
+                type: string
+                example: ali
+              username:
+                type: string
+                example: mrm78
+              email:
+                type: string
+                example: acn@gmail.com
+              bio:
+                type: string
+                example: hi guys!
+              pretty_gender:
+                type: string
+                example: male or female
+              age:
+                type: int
+                example: 21
+              avatar:
+                type: string
+                example: <url>
+              
+
 
 
 
