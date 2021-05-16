@@ -1,3 +1,4 @@
+from django.http.response import ResponseHeaders
 from communities.models import *
 from communities.serializers import *
 from accounts.serializers import *
@@ -47,23 +48,28 @@ class create_community(APIView):
 class all_communities(APIView):
     def get(self, req):
         communities = Community.objects.all()
-        communities = CommunitySerializer(communities, many=True)
-        return Response(communities.data)
+        communities = CommunitySerializer(communities, many=True).data
+        communities = check_community_membership(communities, req.user, many=True)
+        return Response(communities)
 
 class my_communities(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, req):
-        communities = Community.objects.filter(creator=req.user)
-        communities = CommunitySerializer(communities, many=True)
-        return Response(communities.data)
+        communities = list(Community.objects.filter(creator=req.user))
+        communities.extend(list(req.user.joined_communities.all()))
+        communities = CommunitySerializer(communities, many=True).data
+        communities = check_community_membership(communities, req.user, many=True)
+        return Response(communities)
 
 class community_info(APIView):
     def get(self, req):
         community = Community.objects.filter(id=req.GET['id'])
         if not community:
             return Response({'status':'failed', 'error':'invalid community id'})
-        community = CommunitySerializer(community[0])
-        return Response(community.data)
+        community = CommunitySerializer(community[0]).data
+        # add membership and administrator status
+        community = check_community_membership(community, req.user)
+        return Response(community)
 
 
 class create_event(APIView):
@@ -76,11 +82,13 @@ class create_event(APIView):
         community = Community.objects.filter(id=req.POST['community_id'])
         if not community:
             return Response({'status':'failed', 'error':'invalid community id'})
+        if (not req.user in community[0].participants.all()) and (req.user != community[0].creator):
+            return Response({'status':'failed', 'error':'permission denied'})
         # check begin_time format
         try:
             begin_time = timezone.datetime.strptime(req.POST['begin_time'], "%m %d %Y %H:%M:%S").replace(tzinfo=pytz.timezone('UTC'))
-        except:
-            return Response({'status':'failed', 'error':'invalid begin time format'})
+        except Exception as e:
+            return Response({'status':'failed', 'error':'invalid begin time format', 'a':str(e)})
         # create event
         event = Event.objects.create(
             title=req.POST['title'],
@@ -90,6 +98,14 @@ class create_event(APIView):
             begin_time=begin_time
         )
         return Response({'status':'success', 'id':event.id})
+
+class event_info(APIView):
+    def get(self, req):
+        event = Event.objects.filter(id=req.GET['event_id'])
+        if not event:
+            return Response({'status':'failed', 'error':'invalid event id'})
+        event = EventSerializer(event[0]).data
+        return Response(event)
         
 
 class community_events(APIView):
@@ -110,3 +126,39 @@ class community_participants(APIView):
         users.append(community[0].creator)
         users = OtherUserSerializer(users, many=True)
         return Response(users.data)
+
+
+class join_community(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        community = Community.objects.filter(id=req.POST['community_id'])
+        if not community:
+            return Response({'status':'failed', 'error':'invalid community id'})
+        if (req.user in community[0].participants.all()) or (req.user == community[0].creator):
+            return Response({'status':'failed', 'error':'already a member'})
+        community[0].participants.add(req.user)
+        return Response({'status':'success'})
+
+class leave_community(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        community = Community.objects.filter(id=req.POST['community_id'])
+        if not community:
+            return Response({'status':'failed', 'error':'invalid community id'})
+        if not req.user in community[0].participants.all():
+            return Response({'status':'failed', 'error':'not already a member'})
+        community[0].participants.remove(req.user)
+        return Response({'status':'success'})
+
+class join_event(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        event = Event.objects.filter(id=req.POST['event_id'])
+        if not event:
+            return Response({'status':'failed', 'error':'invalid event id'})
+        if req.user not in event[0].community.participants.all() and req.user != event[0].community.creator:
+            return Response({'status':'failed', 'error':'permission denied'})
+        if (req.user in event[0].participants.all()) or (req.user == event[0].creator):
+            return Response({'status':'failed', 'error':'already a member'})
+        event[0].participants.add(req.user)
+        return Response({'status':'success'})

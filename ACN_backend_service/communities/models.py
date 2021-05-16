@@ -15,6 +15,9 @@ class Community(models.Model):
     def tags_info(self):
         return [tag.info() for tag in self.tags.all()]
 
+    def number_of_participants(self):
+        return self.participants.count() + 1
+
 
 
 class Tag(models.Model):
@@ -36,6 +39,9 @@ class Event(models.Model):
 
     def creator_info(self):
         return self.creator.short_info()
+
+    def number_of_participants(self):
+        return self.participants.count() + 1
 
 
 class Post(models.Model):
