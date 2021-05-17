@@ -20,21 +20,23 @@ services:
       - ./docker/back/backend.env
     volumes: 
       - ./ACN_backend_service:/app
+    ports:
+      - '${BACKEND_PORT}:8000'
     command: ./scripts/run.sh
-    network_mode: host
     depends_on:
       - db
 
   frontend:
     build: 
-      context: .
-      dockerfile: ./docker/front/Dockerfile
+      context: ./ACN_frontend_service
+      dockerfile: ../docker/front/Dockerfile.dev
     container_name: frontend
-    restart: unless-stopped
     volumes: 
       - ./ACN_frontend_service:/app
-    command: npm start
-    network_mode: host
+      - /app/node_modules
+    ports:
+      - '${FRONTEND_PORT}:3000'
+    stdin_open: true
 
   swagger:
     image: swaggerapi/swagger-ui

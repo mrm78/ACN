@@ -28,14 +28,13 @@ services:
   
   frontend:
     build: 
-      context: .
-      dockerfile: ./docker/front/Dockerfile
+      context: ./ACN_frontend_service
+      dockerfile: ../docker/front/Dockerfile.prod
     image: frontend_app:${TAG_VERSION}
     container_name: frontend
     restart: unless-stopped
     ports:
       - '${FRONTEND_PORT}:3000'
-    command: npm run build
 
   swagger:
     image: swaggerapi/swagger-ui
