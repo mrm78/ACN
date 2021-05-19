@@ -72,10 +72,12 @@ const useStyle = makeStyles((theme) => ({
 
 export default function Profile(props) {
   const classes = useStyle();
-  const [avatar, setAvatar] = useState();
+  const [avatar, setAvatar] = useState("no");
   const handleChange = (e) => {
+    console.log(tmppath)
     const file = e.target.files[0];
-    setAvatar(file);
+    var tmppath = URL.createObjectURL(file)
+    setAvatar(tmppath);
     props.getAvatar(file);
   };
   const handleDelete = () => {
@@ -84,7 +86,7 @@ export default function Profile(props) {
   };
 
   const getAvatar = () => {
-    setAvatar(props.values.avatar);
+    ;
   };
   useEffect(() => getAvatar(), [props.values]);
 
@@ -107,7 +109,7 @@ export default function Profile(props) {
           <Paper elevation={0} className={classes.avatarPaper}>
             <Avatar
               alt={props.values.name}
-              src={`${Const.baseUrl}${props.values.avatar}`}
+              src={avatar=="no"?`${Const.baseUrl}${props.values.avatar}`:avatar}
               className={classes.avatar}
             />
           </Paper>

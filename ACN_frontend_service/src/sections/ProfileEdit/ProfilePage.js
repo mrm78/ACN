@@ -85,7 +85,7 @@ const useStyle = makeStyles((theme) => ({
 }));
 
 export default function ProfilePage() {
-  const [isLoaded, setIsLoaded] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [values, setValues] = useState({
     old_password: null,
     new_password: null,
@@ -98,11 +98,12 @@ export default function ProfilePage() {
   };
   const getInfo = () => {
     var isOK = false;
+    axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
     const formData = Const.toFormData({
       reco: localStorage.getItem("token").toString(),
     });
     axios
-      .post(`${Const.baseUrl}/account/get_user_info`, formData)
+      .get(`${Const.baseUrl}/account/myself_info`)
       .then((res) => {
         console.log(res);
         // console.log(res.data);
@@ -111,17 +112,12 @@ export default function ProfilePage() {
           setIsLoaded(true);
         }
       });
-    axios
-      .post(`${Const.baseUrl}/account/wishlist_activities`, formData)
-      .then((res) => {
-        setActivities(res.data);
-      });
   };
   useEffect(() => getInfo(), []);
 
   return (
-    // <>
-    //   {isLoaded ? (
+    <>
+      {isLoaded ? (
     <Paper elevation={5}>
       <ThemeProvider theme={theme1}>
       <Grid
@@ -156,11 +152,11 @@ export default function ProfilePage() {
       </Grid>
       </ThemeProvider>
     </Paper>
-    // ) : (
-    //   <Backdrop className={classes.backdrop} open={!isLoaded}>
-    //     <CircularProgress color="inherit" />
-    //   </Backdrop>
-    // )}
-    // </>
+    ) : (
+      <Backdrop className={classes.backdrop} open={!isLoaded}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    )}
+    </>
   );
 }

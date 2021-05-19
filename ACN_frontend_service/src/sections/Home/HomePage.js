@@ -39,6 +39,7 @@ export default function Home() {
     const [isDialogOpen, setDialogOpen] = useState(false);
     const [userinfo,setUserinfo] = useState({Avatar:'',name:'',username:''});
     const [MyC,setMyC] = useState(null);
+    const [MyC2,setMyC2] = useState(null);
     const [value, setValue] = React.useState(0);
     const [Loader, setLoader] = useState(true);
     const history = useHistory();
@@ -49,6 +50,9 @@ export default function Home() {
       setValue(newValue);
       if (newValue === 0) {
         Tab_items = <div ><Community MyC={MyC}/></div>
+      }
+      else if (newValue === 1) {
+        Tab_items = <div ><Community MyC={MyC2}/></div>
       }
       setTab(Tab_items)
     }
@@ -82,6 +86,12 @@ export default function Home() {
             
             
             })
+            axios.get(`${Const.baseUrl}/community/my_communities`, formData).then((res) => {
+                   
+              setMyC2(res.data);
+              
+              
+              })
         //   axios
         //     .post(`${Const.baseUrl}/event/all_activities`, formData)
         //     .then((response) => {
@@ -178,7 +188,7 @@ export default function Home() {
                 <div className="profpage">
                     <div className="profile">
                         <Avatar
-                        src={userinfo.Avatar?userinfo.Avatar:`${pro}`}
+                        src={userinfo.avatar?Const.baseUrl+userinfo.avatar:`${pro}`}
                         className="img2"
                         />
                     </div>

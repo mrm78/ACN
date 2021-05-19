@@ -1,0 +1,57 @@
+@import url("https://fonts.googleapis.com/css?family=Montserrat");
+
+.aa {
+  cursor: pointer;
+    text-decoration: none !important;
+  position: absolute;
+  left: 180px;
+  top: 14px;
+  transform: translate(-50%, -50%);
+  color: #FFC107 !important;
+  text-decoration: none;
+  font-size: .7em;
+  display: inline-block;
+  font-family: Montserrat;
+  text-transform: uppercase;
+  padding: 0.4em 1.4em;
+  border: 1px solid #FFC107;
+  transition: 0.02s 0.2s cubic-bezier(0.1, 0, 0.1, 1);
+}
+.aa::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  background: #FFC107;
+  transition: 0.3s 0.2s cubic-bezier(0.1, 0, 0.1, 1), left 0.3s cubic-bezier(0.1, 0, 0.1, 1);
+  z-index: -1;
+}
+.aa::after {
+  content: "";
+  display: inline-block;
+  background-image: url(../../static/12.png);
+  position: absolute;
+  top: 0;
+  left: calc(100% - 2em);
+  right: 3em;
+  bottom: 0;
+  background-size: 1.2em;
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: right 0.3s cubic-bezier(0.1, 0, 0.1, 1);
+}
+.aa:hover {
+  padding: 0.4em 2.4em 0.4em 0.4em;
+}
+.aa:hover::before {
+  left: calc(100% - 2em);
+  right: 0;
+  transition: 0.3s cubic-bezier(0.1, 0, 0.1, 1), left 0.3s 0.2s cubic-bezier(0.1, 0, 0.1, 1);
+}
+.aa:hover::after {
+  right: 0;
+  transition: right 0.3s 0.2s cubic-bezier(0.1, 0, 0.1, 1);
+}
