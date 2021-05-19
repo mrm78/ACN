@@ -146,7 +146,7 @@ class update_user_info(APIView):
             else:
                 return JsonResponse({'status':'failed', 'error':'invalid old password'})
         if req.POST.get('name'):
-            user.name = req.POST.get('name').encode()
+            user.name = req.POST.get('name')
         if req.POST.get('avatar') == 'delete':
             user.avatar = None
         if req.FILES.get('avatar'):
@@ -156,7 +156,7 @@ class update_user_info(APIView):
         if req.POST.get('gender'):
             user.gender = req.POST.get('gender') == 'male'
         if req.POST.get('bio'):
-            user.bio = req.POST.get('bio').encode()
+            user.bio = req.POST.get('bio')
         user.save()
         user_info = SelfUserSerializer(user)
         return Response(user_info.data)

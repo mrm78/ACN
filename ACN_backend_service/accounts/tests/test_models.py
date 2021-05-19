@@ -25,3 +25,7 @@ class UserModelTest(APITestCase):
         user.gender = False
         user.save()
         self.assertEqual(user.pretty_gender(), 'female')
+
+    def test_short_info(self):
+        user = User.objects.get(username='testuser')
+        self.assertEqual(user.short_info(), {'username':user.username, 'avatar':user.avatar.url if user.avatar else None} )

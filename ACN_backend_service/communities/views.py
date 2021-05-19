@@ -85,7 +85,7 @@ class create_event(APIView):
             return Response({'status':'failed', 'error':'permission denied'})
         # check begin_time format
         try:
-            begin_time = timezone.datetime.strptime(req.POST['begin_time'], "%m %d %Y %H:%M:%S").replace(tzinfo=pytz.timezone('UTC'))
+            begin_time = timezone.datetime.strptime(req.POST['begin_time'], "%Y-%m-%dT%H:%M").replace(tzinfo=pytz.timezone('UTC'))
         except Exception as e:
             return Response({'status':'failed', 'error':'invalid begin time format', 'a':str(e)})
         # create event
