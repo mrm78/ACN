@@ -18,7 +18,7 @@ services:
     container_name: web
     restart: unless-stopped
     env_file:
-      - ./docker/back/backend.env
+      - ./docker/back/.env
     ports:
       - '${BACKEND_PORT}:8000'
     entrypoint: /entrypoint.sh

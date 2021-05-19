@@ -17,12 +17,13 @@ services:
     container_name: backend_app
     restart: unless-stopped
     env_file:
-      - ./docker/back/backend.env
+      - ./docker/back/.env
     volumes: 
       - ./ACN_backend_service:/app
     ports:
       - '${BACKEND_PORT}:8000'
-    command: ./scripts/run.sh
+    entrypoint: /entrypoint.sh
+    command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
 
@@ -31,6 +32,8 @@ services:
       context: ./ACN_frontend_service
       dockerfile: ../docker/front/Dockerfile.dev
     container_name: frontend
+    env_file:
+      - ./docker/front/.env
     volumes: 
       - ./ACN_frontend_service:/app
       - /app/node_modules
