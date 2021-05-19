@@ -13,7 +13,6 @@ def request(method, url, view, data, **headers):
     if method == 'post':
         request = factory.post(url, data=data, **headers)
     elif method == 'get':
-        print(url)
         request = factory.get(url, data=data, **headers)
     response = view(request)
     response.render()
@@ -44,6 +43,7 @@ def build_community():
         creator=User.objects.get(username='testuser')
     )
 
+
 #create community for tests
 def build_event(community_id):
     return Event.objects.create(
@@ -62,6 +62,7 @@ class CommunityTest(APITestCase):
         tag = create_tags()[0]
         view = create_community.as_view()
         data = {
+            'image': open('.env'),
             'title': 'test community',
             'description': 'It is a test community',
             'tags': f'[{tag.id}, {tag.id+1}]',
@@ -95,12 +96,133 @@ class CommunityTest(APITestCase):
         self.assertEqual(response['description'], community.description)
 
 
+    def test_my_communities(self):
+        view = my_communities.as_view()
+        create_user()
+        community = build_community()
+        token = Token.objects.get()
+        response = request('get', '/community/my_communities', view, None, HTTP_AUTHORIZATION=f'Token {token.key}')[0]
+        self.assertEqual(response['id'], community.id)
+        self.assertEqual(response['title'], community.title)
+        self.assertEqual(response['description'], community.description)
+
+
     def test_tags(self):
         all_tags = create_tags()
         view = tags.as_view()
         response = request('get', '/community/tags', view, None)
         for tag in all_tags:
             self.assertIn({'id':tag.id, 'name':tag.name}, response)
+
+
+    def test_community_info(self):
+        create_user()
+        community = build_community()
+        view = community_info.as_view()
+
+        # test invalid community id
+        response = request('get', '/community/community_info', view, {'id':100})
+        self.assertEqual(response['error'], 'invalid community id')
+
+        # test success status
+        response = request('get', '/community/community_info', view, {'id':community.id})[0]
+        self.assertEqual(response['id'], community.id)
+        self.assertEqual(response['title'], community.title)
+        self.assertEqual(response['description'], community.description)
+
+    
+    def test_community_participants(self):
+        token = create_user()
+        community = build_community()
+        view = community_participants.as_view()
+        
+        # test invalid community id
+        response = request('get', '/community/community_participants', view, {'community_id':100})
+        self.assertEqual(response['error'], 'invalid community id')
+
+        # test success status
+        response = request('get', '/community/community_participants', view, {'community_id':community.id})[0]
+        self.assertEqual(response['id'], token.user.id)
+        self.assertEqual(response['username'], token.user.username)
+
+
+    def test_join_community(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        view = join_community.as_view()
+
+        # test invalid community id
+        response = request('post', '/community/join_community', view, {'community_id':100}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid community id')
+
+        # test success status
+        response = request('post', '/community/join_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['status'], 'success')
+
+        # test already a member
+        response = request('post', '/community/join_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'already a member')
+
+
+    def test_leave_community(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        view = leave_community.as_view()
+
+        # test invalid community id
+        response = request('post', '/community/leave_community', view, {'community_id':100}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid community id')
+
+        # test not already a member
+        response = request('post', '/community/leave_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'not already a member')
+
+        # test success status
+        community.participants.add(token2.user)
+        response = request('post', '/community/leave_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['status'], 'success')
+
+
+    def test_create_post(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        view = create_post.as_view()
+
+        # test invalid community id
+        response = request('post', '/community/create_post', view, {'community_id':100}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid community id')
+
+        # test permission denied
+        response = request('post', '/community/create_post', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test no image
+        response = request('post', '/community/create_post', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'no image')
+
+        # test success status
+        data = {'caption':'aa', 'community_id':community.id, 'image':open('.env')}
+        response = request('post', '/community/create_post', view, data, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
+
+
+    def test_community_posts(self):
+        token = create_user()
+        community = build_community()
+        view = community_posts.as_view()
+
+        # test invalid community id
+        response = request('get', '/community/community_posts', view, {'community_id':100})
+        self.assertEqual(response['error'], 'invalid community id')
+
+        # test success status
+        response = request('get', '/community/community_posts', view, {'community_id':community.id})
+        self.assertEqual(len(response), 0)
+
+
 
 
 class EventTest(APITestCase):
@@ -159,4 +281,43 @@ class EventTest(APITestCase):
         self.assertEqual(response['description'], event.description)
         self.assertEqual(response['community'], community.id)
 
-        
+          
+    def test_event_info(self):
+        # test invalid event id
+        view = event_info.as_view()
+        response = request('get', '/community/event_info', view, {'event_id':10})
+        self.assertEqual(response['error'], 'invalid event id')
+
+        # test success status
+        token = create_user()
+        community = build_community()
+        event = build_event(community.id)
+        response = request('get', '/community/event_info', view, {'event_id':event.id})
+        self.assertEqual(response['id'], event.id)
+        self.assertEqual(response['title'], event.title)
+        self.assertEqual(response['description'], event.description)
+
+
+    def test_join_event(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        event = build_event(community.id)
+        view = join_event.as_view()
+
+        # test invalid event id
+        response = request('post', '/community/join_event', view, {'event_id':100}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'invalid event id')
+
+        # test permission denied
+        response = request('post', '/community/join_event', view, {'event_id':event.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test already a member
+        response = request('post', '/community/join_event', view, {'event_id':event.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'already a member')
+
+        # test success status
+        community.participants.add(token2.user)
+        response = request('post', '/community/join_event', view, {'event_id':event.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['status'], 'success')
