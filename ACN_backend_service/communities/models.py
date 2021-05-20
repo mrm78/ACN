@@ -55,6 +55,9 @@ class Post(models.Model):
     def creator_info(self):
         return self.user.short_info()
 
+    def number_of_likes(self):
+        return self.likes.count()
+
 class Post_comment(models.Model):
     text = models.TextField()
     post = models.ForeignKey(Post, on_delete=models.CASCADE)

@@ -1106,7 +1106,7 @@ paths:
             type: array
             items:
               type: object
-              example: {'id':1, 'caption':'...', 'image':'<url>', 'date':'...','creator_info':{'username':'mrm78','avatar':'<url>'}}
+              example: {'id':1, 'caption':'...', 'image':'<url>', 'date':'...','creator_info':{'username':'mrm78','avatar':'<url>'}, 'liked':'true'}
         200-2:
           description: failed
           schema:
@@ -1119,3 +1119,241 @@ paths:
                 type: string
                 example: invalid community id
   
+  /community/post_comment:
+    post:
+      tags:
+        - Community
+      summary: create a new post comment
+      description: users can create a new post comment
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: community info
+        schema:
+          type: object
+          required:
+          - text
+          - post_id
+          properties:
+            text:
+              type: string
+              example: good post
+            post_id:
+              type: integer
+              example: 2
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              id:
+                type: int
+                example: 5
+        200-2:
+          description: failed -> text
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: empty text
+        200-3:
+          description: failed -> invalid post id
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid post id
+        200-4:
+          description: failed -> permission denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: permission denied
+
+
+  /community/post_comments:
+    get:
+      tags:
+        - Community
+      summary: a
+      description: a
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: community info
+        schema:
+          type: object
+          required:
+          - post_id
+          properties:
+            post_id:
+              type: integer
+              example: 5
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: array
+            items:
+              type: object
+              example: {'id':1, 'text':'...', 'date':'...','creator_info':{'username':'mrm78','avatar':'<url>'}, 'post':2}
+        200-2:
+          description: failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid post id
+
+  /community/like_post:
+    post:
+      tags:
+        - Community
+      summary: like a post
+      description: like a post
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: community info
+        schema:
+          type: object
+          required:
+          - post_id
+          properties:
+            post_id:
+              type: integer
+              example: 5
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: array
+            items:
+              type: object
+              example: {'status':'success'}
+        200-2:
+          description: failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid post id
+        200-3:
+          description: failed -> permission denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: permission denied
+        200-4:
+          description: failed -> liked before
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: liked before
+
+  /community/unlike_post:
+    post:
+      tags:
+        - Community
+      summary: unlike a liked post
+      description: like a post
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: community info
+        schema:
+          type: object
+          required:
+          - post_id
+          properties:
+            post_id:
+              type: integer
+              example: 5
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: array
+            items:
+              type: object
+              example: {'status':'success'}
+        200-2:
+          description: failed
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid post id
+        200-3:
+          description: failed -> permission denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: permission denied
+        200-4:
+          description: failed -> not liked before
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: not liked before

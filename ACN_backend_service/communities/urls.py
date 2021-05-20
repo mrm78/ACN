@@ -16,4 +16,8 @@ urlpatterns = [
     path('join_event', join_event.as_view()),
     path('create_post', create_post.as_view()),
     path('community_posts', community_posts.as_view()),
+    path('post_comment', post_comment.as_view()),
+    path('post_comments', post_comments.as_view()),
+    path('like_post', like_post.as_view()),
+    path('unlike_post', unlike_post.as_view()),
 ]
