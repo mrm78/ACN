@@ -1,3 +1,4 @@
+from rest_framework import response
 from communities.models import *
 from communities.serializers import *
 from accounts.serializers import *
@@ -85,7 +86,7 @@ class create_event(APIView):
             return Response({'status':'failed', 'error':'permission denied'})
         # check begin_time format
         try:
-            begin_time = timezone.datetime.strptime(req.POST['begin_time'], "%m %d %Y %H:%M:%S").replace(tzinfo=pytz.timezone('UTC'))
+            begin_time = timezone.datetime.strptime(req.POST['begin_time'], "%Y-%m-%dT%H:%M").replace(tzinfo=pytz.timezone('UTC'))
         except Exception as e:
             return Response({'status':'failed', 'error':'invalid begin time format', 'a':str(e)})
         # create event
@@ -188,6 +189,61 @@ class community_posts(APIView):
             return Response({'status':'failed', 'error':'invalid community id'})
         posts = community[0].post_set.all()
         posts = PostSerializer(posts, many=True).data
+        posts = check_post_like(posts, req.user)
         return Response(posts)
         
+        
+class post_comment(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        post = Post.objects.filter(id=req.POST['post_id'])
+        if not post:
+            return Response({'status':'failed', 'error':'invalid post id'})
+        if req.user not in post[0].community.participants.all() and req.user != post[0].community.creator:
+            return Response({'status':'failed', 'error':'permission denied'})
+        if not req.POST.get('text'):
+            return Response({'status':'failed', 'error':'empty text'})
+        comment = Post_comment.objects.create(
+            text=req.POST.get('text'),
+            post = post[0],
+            user=req.user
+            )
+        return Response({'status':'success', 'id':comment.id})
+
+
+class post_comments(APIView):
+    def get(self, req):
+        post = Post.objects.filter(id=req.GET['post_id'])
+        if not post:
+            return Response({'status':'failed', 'error':'invalid post id'})
+        comments = Post_comment.objects.filter(post=post[0])
+        comments = CommentSerializer(comments, many=True)
+        return Response(comments.data)
+
+
+class like_post(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        post = Post.objects.filter(id=req.POST['post_id'])
+        if not post:
+            return Response({'status':'failed', 'error':'invalid post id'})
+        if req.user not in post[0].community.participants.all() and req.user != post[0].community.creator:
+            return Response({'status':'failed', 'error':'permission denied'})
+        if req.user in post[0].likes.all():
+            return Response({'status':'failed', 'error':'liked before'})
+        post[0].likes.add(req.user)
+        return Response({'status':'success'})
+
+class unlike_post(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        post = Post.objects.filter(id=req.POST['post_id'])
+        if not post:
+            return Response({'status':'failed', 'error':'invalid post id'})
+        if req.user not in post[0].community.participants.all() and req.user != post[0].community.creator:
+            return Response({'status':'failed', 'error':'permission denied'})
+        if not req.user in post[0].likes.all():
+            return Response({'status':'failed', 'error':'not liked before'})
+        post[0].likes.remove(req.user)
+        return Response({'status':'success'})
         

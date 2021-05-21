@@ -34,4 +34,15 @@ class EventSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id', 'caption', 'image', 'date', 'creator_info']
+        fields = ['id', 'caption', 'image', 'date', 'number_of_likes', 'creator_info']
+
+def check_post_like(posts_data, user):
+    for post_data in posts_data:
+        post = Post.objects.get(id=post_data['id'])
+        post_data['liked'] = 'true' if user in post.likes.all() else 'false'
+    return posts_data
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post_comment
+        fields = ['id', 'text', 'creator_info', 'date', 'post']
