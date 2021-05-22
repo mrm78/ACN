@@ -17,9 +17,12 @@ import {
 import Const from "../../static/CONST";
 import "./Com.css";
 import pro from '../../static/pro2.png';
-import post from "./post"
+import Post from "./post"
+import Event from "./event"
 import { useHistory } from "react-router-dom";
 import Butt from "./but"
+import Com from "../../static/community.jpg"
+import { post } from "jquery";
 
 
 
@@ -43,15 +46,26 @@ export default function Community(props) {
     const [value, setValue] = React.useState(0);
     const [Loader, setLoader] = useState(true);
     const [posts , setPosts] = useState([])
+    const [events , setEvents] = useState([])
+    const [parti , setParti] = useState(0)
     const history = useHistory();
     const [Tab_item, setTab] = useState();
+    const [url,setUrl]= useState();
 
     const id = props.match.params.comId;
     let Tab_items = null;
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
       setValue(newValue);
       if (newValue === 0) {
-        Tab_items = post(posts)
+        Tab_items =<>
+        {posts.map((pos)=>{return(<Post pos={pos}/>)})}
+        </>
+        
+      }
+      else if(newValue === 1){
+        Tab_items =<>
+        {events.map((eve)=>{return(<Event eve={eve}/>)})}
+        </>
       }
       setTab(Tab_items)
     }
@@ -68,6 +82,7 @@ export default function Community(props) {
       window.location.href='/'
     };
     useEffect(() => {
+        
         // setLoader(true);
         if (localStorage.getItem("token") == null) {
           window.location.href = "/"
@@ -79,13 +94,28 @@ export default function Community(props) {
           axios.get(`${Const.baseUrl}/community/community_info?id=${id}`).then((response) => {
             setIsjoin(response.data[0].is_joined === "true")
             setUserinfo(response.data);
+            setParti(response.data[0].number_of_participants)                        
+            if(response.data[0].image){
+              setUrl(Const.baseUrl+response.data[0].image)
+            }
+            else{
+              setUrl(Com)
+            }
           });
           axios
             .get(`${Const.baseUrl}/community/community_posts?community_id=${id}`)
             .then((response) => {
-              setTab(post(response.data))
+              setTab(<>
+                {response.data.map((pos)=>{return(<Post pos={pos}/>)})}
+                </>)
               setPosts(response.data)
               });
+
+          axios
+            .get(`${Const.baseUrl}/community/community_events?community_id=${id}`)
+              .then((response) => {
+                setEvents(response.data)
+                });
     
         //       setAll_ac(response.data);
         //     });
@@ -111,6 +141,7 @@ export default function Community(props) {
       useEffect(() => {
         if (userinfo != null) {
             setLoader(false);
+
           }
       }, [userinfo]);
 
@@ -119,7 +150,8 @@ export default function Community(props) {
       <>
       {!Loader ? (
         <div className="Home_main"><ThemeProvider theme={theme}>
-            <div className="h_header2" style={{backgroundImage: `url(${Const.baseUrl}${userinfo[0].image})`}}>
+            <div className="h_header2"
+             style={{backgroundImage: `url(${url})`}}>
                 
 
                                 <div className="loz2">
@@ -137,14 +169,14 @@ export default function Community(props) {
             <div className="h_hbody2">
                 <div className="profile1">
                     <Avatar
-                        src={`${Const.baseUrl}${userinfo[0].image}`}
+                        src={`${url}`}
                         className="img22"
                         /></div>
                 <div className="bio">
                     <div>
-                    <h4>{userinfo[0].title}</h4>{Butt(isjoin,setIsjoin,id)}</div>
+                    <h4>{userinfo[0].title}</h4>{Butt(isjoin,setIsjoin,id,setParti,parti)}</div>
                     <div className="participants" style={{color:"rgb(159 159 159)"}}>
-                        <p >{userinfo[0].number_of_participants} Participant</p></div>
+                        <p >{parti} Participant</p></div>
                     <div className="desc">
                         {userinfo[0].description}</div></div>
             </div>

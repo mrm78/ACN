@@ -5,15 +5,16 @@ import axios from "axios";
 import Const from "../../static/CONST";
 
 
-const Butt = (isjoin,setIsjoin,id) =>{ 
+const Butt = (isjoin,setIsjoin,id,setParti,parti) =>{ 
     
     const handleclick = (ur)=>{
+        setParti(isjoin?parti-1:parti+1)
         axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
         const formData = new FormData();
         formData.append("community_id", id);
         axios.post(`${Const.baseUrl}${ur}`, formData);
         setIsjoin(!isjoin)}
-    console.log(isjoin)
+
     return <div className={styles.aa} onClick={isjoin?()=>handleclick("/community/leave_community"):()=>handleclick("/community/join_community")} >
         {isjoin?"leave":"join"}</div>;
     

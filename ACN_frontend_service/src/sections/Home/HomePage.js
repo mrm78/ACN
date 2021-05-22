@@ -140,7 +140,7 @@ export default function Home() {
                     <ul className="smain_loz">
                     <li className="slozac1">
                     <ul className="smain_loz" >
-                    <li className="slozac11">
+                    <li className="slozac11" onClick={()=>history.push("./profileedit")}>
                     <div className="stitle"><h5>Profile Edits</h5></div>
                     <div className="sbg1"></div>
                     <p className="ffont sD_label1"></p>
@@ -193,9 +193,9 @@ export default function Home() {
                         />
                     </div>
                     <h4 style={{color:"rgb(54, 54, 54,0.6)",textAlign:"center",marginTop:"40px"}}>
-                      {/* <span style={{fontSize:".3rem",color:"rgb(54, 54, 54,0.4)"}}>Name:</span> */}
+                      <span style={{fontSize:".75rem",color:"rgb(54, 54, 54,0.4)"}}>Name:  </span>
                        {userinfo.name}<br/>
-                      {/* <span style={{fontSize:".3rem",color:"rgb(54, 54, 54,0.4)"}}>UserName:</span> */}
+                      <span style={{fontSize:".75rem",color:"rgb(54, 54, 54,0.4)"}}>UserName:  </span>
                        {userinfo.username}</h4>
                 </div>
             </div>
