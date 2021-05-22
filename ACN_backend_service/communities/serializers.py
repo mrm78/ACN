@@ -34,7 +34,7 @@ class EventSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id', 'caption', 'image', 'date', 'number_of_likes', 'creator_info']
+        fields = ['id', 'caption', 'image', 'date', 'number_of_likes', 'number_of_comments', 'creator_info']
 
 def check_post_like(posts_data, user):
     for post_data in posts_data:
