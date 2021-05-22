@@ -1082,8 +1082,8 @@ paths:
     get:
       tags:
         - Community
-      summary: a
-      description: a
+      summary: return all posts of a community
+      description: return all posts of a community
       consumes:
       - application/json
       produces:
@@ -1106,7 +1106,7 @@ paths:
             type: array
             items:
               type: object
-              example: {'id':1, 'caption':'...', 'image':'<url>', 'date':'...','creator_info':{'username':'mrm78','avatar':'<url>'}, 'liked':'true'}
+              example: {'id':1, 'caption':'...', 'image':'<url>', 'date':'...','number_of_likes':2,'number_of_posts':5 ,creator_info':{'username':'mrm78','avatar':'<url>'}, 'liked':'true'}
         200-2:
           description: failed
           schema:

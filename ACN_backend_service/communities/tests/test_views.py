@@ -55,14 +55,19 @@ def build_event(community_id):
 
 
 
-
 class CommunityTest(APITestCase):
+
+    #create post for tests   
+    def build_post(self, community_id, token):
+        self.client.post('/community/create_post',data={'community_id':community_id, 'caption':'sdf', 'image':open('manage.py')}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        return Post.objects.last()
+
     def test_create_community(self):
         token = create_user()
         tag = create_tags()[0]
         view = create_community.as_view()
         data = {
-            'image': open('.env'),
+            'image': open('manage.py'),
             'title': 'test community',
             'description': 'It is a test community',
             'tags': f'[{tag.id}, {tag.id+1}]',
@@ -204,7 +209,7 @@ class CommunityTest(APITestCase):
         self.assertEqual(response['error'], 'no image')
 
         # test success status
-        data = {'caption':'aa', 'community_id':community.id, 'image':open('.env')}
+        data = {'caption':'aa', 'community_id':community.id, 'image':open('manage.py')}
         response = request('post', '/community/create_post', view, data, HTTP_AUTHORIZATION=f'Token {token.key}')
         self.assertEqual(response['status'], 'success')
 
@@ -221,6 +226,98 @@ class CommunityTest(APITestCase):
         # test success status
         response = request('get', '/community/community_posts', view, {'community_id':community.id})
         self.assertEqual(len(response), 0)
+
+    
+    def test_post_comment(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        post = self.build_post(community.id, token)
+        view = post_comment.as_view()
+
+        # test invalid post id
+        response = request('post', '/community/post_comment', view, {'post_id':100}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid post id')
+
+        # test permission denied
+        response = request('post', '/community/post_comment', view, {'post_id':post.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test empty text
+        response = request('post', '/community/post_comment', view, {'post_id':post.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'empty text')
+
+        # test success status
+        data = {'text':'aa', 'post_id':post.id}
+        response = request('post', '/community/post_comment', view, data, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
+
+
+    def test_post_comments(self):
+        token = create_user()
+        community = build_community()
+        post = self.build_post(community.id, token)
+        view = post_comments.as_view()
+
+        # test invalid post id
+        response = request('get', '/community/post_comments', view, {'post_id':100})
+        self.assertEqual(response['error'], 'invalid post id')
+
+        # test success status
+        response = request('get', '/community/post_comments', view, {'post_id':post.id})
+        self.assertEqual(len(response), 0)
+
+
+    def test_like_post(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        post = self.build_post(community.id, token)
+        view = like_post.as_view()
+
+        # test invalid post id
+        response = request('post', '/community/like_post', view, {'post_id':100}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid post id')
+
+        # test permission denied
+        response = request('post', '/community/like_post', view, {'post_id':post.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test success status
+        response = request('post', '/community/like_post', view, {'post_id':post.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
+
+        # test liked before
+        response = request('post', '/community/like_post', view, {'post_id':post.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'liked before')
+
+    
+    def test_unlike_post(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        post = self.build_post(community.id, token)
+        view = unlike_post.as_view()
+
+        # test invalid post id
+        response = request('post', '/community/unlike_post', view, {'post_id':100}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid post id')
+
+        # test permission denied
+        response = request('post', '/community/unlike_post', view, {'post_id':post.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test not liked before
+        response = request('post', '/community/unlike_post', view, {'post_id':post.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'not liked before')
+
+        # test success status
+        post.likes.add(token.user)
+        response = request('post', '/community/unlike_post', view, {'post_id':post.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
+
+        
+
 
 
 

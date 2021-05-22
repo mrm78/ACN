@@ -26,7 +26,7 @@ class UserModelTest(APITestCase):
         creator=User.objects.get(username='testuser'))
 
         #create post
-        self.client.post('/community/create_post',data={'community_id':community.id, 'caption':'sdf', 'image':open('.env')}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.client.post('/community/create_post',data={'community_id':community.id, 'caption':'sdf', 'image':open('manage.py')}, HTTP_AUTHORIZATION=f'Token {token.key}')
 
     def test_post_creator_info(self):
         post = Post.objects.get()
