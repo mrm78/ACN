@@ -26,6 +26,18 @@ services:
     depends_on:
       - db
   
+  test_web:
+    build: 
+      context: .
+      dockerfile: ./docker/back/Dockerfile
+    image: test_web:${TAG_VERSION}
+    container_name: test_web
+    env_file:
+      - ./docker/back/.env
+    command: python manage.py test
+    depends_on:
+      - db
+  
   frontend:
     build: 
       context: ./ACN_frontend_service
@@ -35,6 +47,13 @@ services:
     restart: unless-stopped
     ports:
       - '${FRONTEND_PORT}:3000'
+
+  test_frontend:
+    build: 
+      context: ./ACN_frontend_service
+      dockerfile: ../docker/front/Dockerfile.test
+    image: test_frontend:${TAG_VERSION}
+    container_name: test_frontend
 
   swagger:
     image: swaggerapi/swagger-ui
