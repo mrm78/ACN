@@ -227,7 +227,7 @@ class UserTest(APITestCase):
             'username': 'testuser2', 'email': 'testuser2@acn.com',
             'new_password': '1234567', 'old_password': '123456',
             'name': 'ali', 'age': 22, 'gender': 'female', 
-            'bio': 'hiiiii', 'avatar':'delete', 'avatar':open('.env')
+            'bio': 'hiiiii', 'avatar':'delete', 'avatar':open('manage.py')
         }
         response = self.client.post('/account/update_user_info', data=data, HTTP_AUTHORIZATION=f'Token {token1.key}').json()
         self.assertEqual(response.get('name'), 'ali')

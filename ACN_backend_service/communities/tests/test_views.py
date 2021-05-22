@@ -59,7 +59,7 @@ class CommunityTest(APITestCase):
 
     #create post for tests   
     def build_post(self, community_id, token):
-        self.client.post('/community/create_post',data={'community_id':community_id, 'caption':'sdf', 'image':open('.env')}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.client.post('/community/create_post',data={'community_id':community_id, 'caption':'sdf', 'image':open('manage.py')}, HTTP_AUTHORIZATION=f'Token {token.key}')
         return Post.objects.last()
 
     def test_create_community(self):
@@ -67,7 +67,7 @@ class CommunityTest(APITestCase):
         tag = create_tags()[0]
         view = create_community.as_view()
         data = {
-            'image': open('.env'),
+            'image': open('manage.py'),
             'title': 'test community',
             'description': 'It is a test community',
             'tags': f'[{tag.id}, {tag.id+1}]',
@@ -209,7 +209,7 @@ class CommunityTest(APITestCase):
         self.assertEqual(response['error'], 'no image')
 
         # test success status
-        data = {'caption':'aa', 'community_id':community.id, 'image':open('.env')}
+        data = {'caption':'aa', 'community_id':community.id, 'image':open('manage.py')}
         response = request('post', '/community/create_post', view, data, HTTP_AUTHORIZATION=f'Token {token.key}')
         self.assertEqual(response['status'], 'success')
 
