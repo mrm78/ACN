@@ -24,6 +24,7 @@ import { PersonOutline } from "@material-ui/icons";
 function Event(props){
   const [parti , setParti] = useState(props.eve.number_of_participants)
   const [count , setcount] = useState(0)
+  const [url,setUrl]= useState(props.eve.image?Const.baseUrl+props.eve.image:"https://bigdata-ir.com/wp-content/uploads/2020/04/Event1.jpg");
   // let liked = pos.liked
 
   const AddPart=(id)=>{
@@ -46,7 +47,7 @@ function Event(props){
     	  <div className="blog-card2">
     <div className="meta">
       <div className="photo" 
-      style={{backgroundImage: "url(https://bigdata-ir.com/wp-content/uploads/2020/04/Event1.jpg)"}}></div>
+      style={{backgroundImage: `url(${url})`}}></div>
       <ul className="details">
     <li className="author">
     <a href="#"><Person style={{marginBottom:"-2px", fontSize:"15px" ,color:"white" }}/>
