@@ -13,6 +13,7 @@ import {
     Tab,
     Paper,
     Avatar,
+    Button
   } from "@material-ui/core";
 import Const from "../../static/CONST";
 import "./Com.css";
@@ -23,6 +24,8 @@ import { useHistory } from "react-router-dom";
 import Butt from "./but"
 import Com from "../../static/community.jpg"
 import { post } from "jquery";
+import AddIcon from "@material-ui/icons/Add"
+import CreatePE from "../CreatePostEvent/DialogBox"
 
 
 
@@ -60,7 +63,7 @@ export default function Community(props) {
         Tab_items =<>
         {posts.map((pos)=>{return(<Post pos={pos}/>)})}
         </>
-        
+
       }
       else if(newValue === 1){
         Tab_items =<>
@@ -82,7 +85,7 @@ export default function Community(props) {
       window.location.href='/'
     };
     useEffect(() => {
-        
+
         // setLoader(true);
         if (localStorage.getItem("token") == null) {
           window.location.href = "/"
@@ -90,11 +93,11 @@ export default function Community(props) {
           axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
           const formData = new FormData();
           formData.append("id", props.match.params.comId);
-    
+
           axios.get(`${Const.baseUrl}/community/community_info?id=${id}`).then((response) => {
             setIsjoin(response.data[0].is_joined === "true")
             setUserinfo(response.data);
-            setParti(response.data[0].number_of_participants)                        
+            setParti(response.data[0].number_of_participants)
             if(response.data[0].image){
               setUrl(Const.baseUrl+response.data[0].image)
             }
@@ -116,7 +119,7 @@ export default function Community(props) {
               .then((response) => {
                 setEvents(response.data)
                 });
-    
+
         //       setAll_ac(response.data);
         //     });
         //   axios
@@ -152,7 +155,7 @@ export default function Community(props) {
         <div className="Home_main"><ThemeProvider theme={theme}>
             <div className="h_header2"
              style={{backgroundImage: `url(${url})`}}>
-                
+
 
                                 <div className="loz2">
                     <ul className="smain_loz">
@@ -163,7 +166,7 @@ export default function Community(props) {
                     </li>
                     </ul>
                     </div>
-                
+
             </div>
             <div className="h_body2">
             <div className="h_hbody2">
@@ -190,7 +193,7 @@ export default function Community(props) {
             variant="outlined"
       />)})}
             </div>
-            
+
             <Paper square>
                 <Tabs
                     value={value}
@@ -200,19 +203,21 @@ export default function Community(props) {
                     textColor="secondary"
                     onChange={handleChange}
                     aria-label="disabled tabs example">
-                
+
                     <Tab label="Posts"/>
                     <Tab label="Events" />
                 </Tabs>
             </Paper>
-            
+
             <Grid sm={12} xs={12} style={{ margin: '15px auto 60px auto',width:"100%"
             ,backgroundColor:"white" }}>
                             {Tab_item}
                         </Grid>
-            
+
             </div></ThemeProvider>
+
         </div>
+
           ) : (<Backdrop classes={{
             root:{
             alignContent: "center",
@@ -222,6 +227,10 @@ export default function Community(props) {
           }} open={Loader}>
             <div className="loader"></div>
           </Backdrop>)}
+          <Button onClick={handleDialogOpen} color="primary" style={{width:"60px", height:"60px", borderRadius: "30px", position:"fixed", bottom:"20px", right:"20px", backgroundColor:"#efc700"}}>
+           <AddIcon style={{color:"#000000"}}/>
+          </Button>
+          <CreatePE state={isDialogOpen} handleClose={handleDialogClose} comId={id}/>
           </>
     )
 }
