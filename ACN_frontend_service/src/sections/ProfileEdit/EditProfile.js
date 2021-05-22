@@ -152,7 +152,7 @@ export default function EditProfile(props) {
     setValues(info);
   };
   useEffect(() => getData(), [props.data]);
-  // console.log(values);
+
   const classes = useStyle();
   const basicInfo = [
     { title: "Name", value: values.name, key: "name" },
@@ -181,6 +181,7 @@ export default function EditProfile(props) {
   ];
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
+    console.log(values);
   };
 
   const handleShowPassword = (prop) => () => {
@@ -218,7 +219,7 @@ export default function EditProfile(props) {
       name: values.name,
       email: values.email,
       avatar: values.avatar,
-      gender: values.gender,
+      gender: values.pretty_gender,
       age: values.age,
       bio: values.bio,
       old_password: values.currentPassword,
@@ -356,7 +357,7 @@ export default function EditProfile(props) {
                 fullWidth="true"
                 size="small"
                 select
-                value={values.age}
+                value={values.age?values.age:props.data.age}
                 onChange={handleChange("age")}
                 label="Age"
                 MenuProps={{
@@ -379,42 +380,13 @@ export default function EditProfile(props) {
           </Grid>
           <Grid item container xs={12} className={classes.field}>
             {props.isLoaded ? (
-              <TextField
-                variant="outlined"
-                fullWidth="true"
-                size="small"
-                select
-                value={values.city_id}
-                onChange={handleChange("city_id")}
-                label="City"
-                MenuProps={{
-                  anchorOrigin: {
-                    vertical: "bottom",
-                    horizontal: "left",
-                  },
-                  // getContentAnchorEl: null,
-                }}
-              >
-                {Const.citiesList.map((city) => {
-                  // console.log(city);
-                  return (
-                    <MenuItem value={city.id}>{city.name}</MenuItem>
-                  );
-                })}
-              </TextField>
-            ) : (
-              <Skeleton variant="rect" className={classes.textfieldSkeleton} />
-            )}
-          </Grid>
-          <Grid item container xs={12} className={classes.field}>
-            {props.isLoaded ? (
               <FormControl size="small" fullWidth="true" component="fieldset">
                 <RadioGroup
                   row
                   aria-label="gender"
                   name="gender1"
-                  value={values.gender}
-                  onChange={handleChange("gender")}
+                  value={values.pretty_gender?values.pretty_gender:props.data.pretty_gender}
+                  onChange={handleChange("pretty_gender")}
                   className={classes.radioForm}
                 >
                   <Grid item container lg={12} xs={12}>
@@ -447,20 +419,7 @@ export default function EditProfile(props) {
             )}
           </Grid>
         </Grid>
-        <Grid item container xs={12} className={classes.field}>
-          {props.isLoaded ? (
-            <Button
-              variant="outlined"
-              color="secondary"
-              fullWidth="true"
-              onClick={handleDialogOpen}
-            >
-              Edit My Favorites
-            </Button>
-          ) : (
-            <Skeleton variant="rect" className={classes.textfieldSkeleton} />
-          )}
-        </Grid>
+
         <Grid
           item
           container
@@ -561,12 +520,6 @@ export default function EditProfile(props) {
         </Grid>
       </Grid>
       {/* </form> */}
-      <FavoritesDialog
-        state={isDialogOpen}
-        activities={props.activities}
-        handleClose={handleDialogClose}
-        getFavorites={getFavorites}
-      />
       <Snackbar
         open={open}
         autoHideDuration={6000}

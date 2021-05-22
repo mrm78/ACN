@@ -4,12 +4,11 @@ import "./community.css"
 import { useHistory } from "react-router-dom";
 import {Add,ArrowForwardIos,Info, LinearScale} from '@material-ui/icons';
 import Com from "../../static/community.jpg"
-
+import Const from "../../static/CONST";
 
 const theme = createMuiTheme({palette:{
     secondary:{main:"rgb(206, 64, 64)"}
 }})
-
 const useStyle = makeStyles((theme: Theme)=>createStyles({
     root1 : {
         alignItems:'center',
@@ -72,7 +71,7 @@ export default function Community(props){
         
         const TTData= <GridListTile onClick={()=>history.push(`/community/${tile.id}`)} style={{cursor:"pointer"}} key={tile.id} className="Eimg">
         
-        <img style={{transition:'all .6s ease'}}  src={`${Com}`} alt={tile.title}  />
+        <img style={{transition:'all .6s ease'}}  src={tile.image?Const.baseUrl+tile.image:`${Com}`} alt={tile.title}  />
          <GridListTileBar
             title={tile.title}
             subtitle={<span> |  {tile.description?tile.description:''}  | </span>}

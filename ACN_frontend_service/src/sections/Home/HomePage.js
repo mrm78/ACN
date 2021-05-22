@@ -39,6 +39,7 @@ export default function Home() {
     const [isDialogOpen, setDialogOpen] = useState(false);
     const [userinfo,setUserinfo] = useState({Avatar:'',name:'',username:''});
     const [MyC,setMyC] = useState(null);
+    const [MyC2,setMyC2] = useState(null);
     const [value, setValue] = React.useState(0);
     const [Loader, setLoader] = useState(true);
     const history = useHistory();
@@ -49,6 +50,9 @@ export default function Home() {
       setValue(newValue);
       if (newValue === 0) {
         Tab_items = <div ><Community MyC={MyC}/></div>
+      }
+      else if (newValue === 1) {
+        Tab_items = <div ><Community MyC={MyC2}/></div>
       }
       setTab(Tab_items)
     }
@@ -82,6 +86,12 @@ export default function Home() {
             
             
             })
+            axios.get(`${Const.baseUrl}/community/my_communities`, formData).then((res) => {
+                   
+              setMyC2(res.data);
+              
+              
+              })
         //   axios
         //     .post(`${Const.baseUrl}/event/all_activities`, formData)
         //     .then((response) => {
@@ -130,7 +140,7 @@ export default function Home() {
                     <ul className="smain_loz">
                     <li className="slozac1">
                     <ul className="smain_loz" >
-                    <li className="slozac11">
+                    <li className="slozac11" onClick={()=>history.push("./profileedit")}>
                     <div className="stitle"><h5>Profile Edits</h5></div>
                     <div className="sbg1"></div>
                     <p className="ffont sD_label1"></p>
@@ -178,14 +188,14 @@ export default function Home() {
                 <div className="profpage">
                     <div className="profile">
                         <Avatar
-                        src={userinfo.Avatar?userinfo.Avatar:`${pro}`}
+                        src={userinfo.avatar?Const.baseUrl+userinfo.avatar:`${pro}`}
                         className="img2"
                         />
                     </div>
                     <h4 style={{color:"rgb(54, 54, 54,0.6)",textAlign:"center",marginTop:"40px"}}>
-                      {/* <span style={{fontSize:".3rem",color:"rgb(54, 54, 54,0.4)"}}>Name:</span> */}
+                      <span style={{fontSize:".75rem",color:"rgb(54, 54, 54,0.4)"}}>Name:  </span>
                        {userinfo.name}<br/>
-                      {/* <span style={{fontSize:".3rem",color:"rgb(54, 54, 54,0.4)"}}>UserName:</span> */}
+                      <span style={{fontSize:".75rem",color:"rgb(54, 54, 54,0.4)"}}>UserName:  </span>
                        {userinfo.username}</h4>
                 </div>
             </div>
