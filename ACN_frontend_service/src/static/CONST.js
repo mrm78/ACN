@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const baseUrl = "http://157.90.39.42:8000";
+const baseUrl = process.env.REACT_APP_BASE_URL;
 const chatBaseUrl = "172.17.3.118:5000";
 
 const toFormData = (data) => {
