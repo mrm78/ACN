@@ -1357,3 +1357,75 @@ paths:
               error:
                 type: string
                 example: not liked before
+
+  /community/edit_community:
+    post:
+      tags:
+        - Community
+      summary: edit a community
+      description: admin can edit a community
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: edit community
+        schema:
+          type: object
+          required:
+          - community_id
+          - title
+          - description
+          - tags
+          - image
+          properties:
+            community_id:
+              type: int
+              example: 5
+            title:
+              type: string
+              example: call of duty
+            description:
+              type: string
+              example: community of gamers ;)
+            tags:
+              type: list
+              example: [1,2,3]
+            image:
+              type: string
+              example: <file>
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+              id:
+                type: int
+                example: 5
+        200-2:
+          description: failed -> invalid community id
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid community id
+        200-3:
+          description: failed -> permission denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: permission denied

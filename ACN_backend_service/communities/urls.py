@@ -20,4 +20,5 @@ urlpatterns = [
     path('post_comments', post_comments.as_view()),
     path('like_post', like_post.as_view()),
     path('unlike_post', unlike_post.as_view()),
+    path('edit_community', edit_community.as_view()),
 ]

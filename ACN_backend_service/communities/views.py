@@ -247,3 +247,36 @@ class unlike_post(APIView):
         post[0].likes.remove(req.user)
         return Response({'status':'success'})
         
+
+class edit_community(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        # check community id
+        community = Community.objects.filter(id=req.POST['community_id'])
+        if not community:
+            return Response({'status':'failed', 'error':'invalid community id'})
+        community = community[0]
+        # check permission
+        if req.user != community.creator:
+            return Response({'status':'failed', 'error':'permission denied'})
+        # change title
+        if req.POST.get('title'):
+            community.title = req.POST.get('title')
+        # change description
+        if req.POST.get('description'):
+            community.description = req.POST.get('description')
+        # change tags
+        if req.POST.get('tags'):
+            community.tags.clear()
+            for tag_id in json.loads(req.POST['tags']):
+                try:
+                    tag = Tag.objects.get(id=tag_id)
+                    community.tags.add(tag)
+                except Exception as e:
+                    pass
+        # change image
+        image = req.FILES.get('image')
+        if image and image.size < 4000000:
+            community.image = image
+        community.save()
+        return Response({'status':'success'})

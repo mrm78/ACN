@@ -36,11 +36,11 @@ def create_tags():
     return Tag.objects.all()
 
 #create community for tests
-def build_community():
+def build_community(username='testuser'):
     return Community.objects.create(
         title='test community',
         description='It is a test community',
-        creator=User.objects.get(username='testuser')
+        creator=User.objects.get(username=username)
     )
 
 
@@ -315,6 +315,41 @@ class CommunityTest(APITestCase):
         post.likes.add(token.user)
         response = request('post', '/community/unlike_post', view, {'post_id':post.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
         self.assertEqual(response['status'], 'success')
+
+
+    def test_edit_community(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        tag = create_tags()[0]
+        view = edit_community.as_view()
+
+        # test invalid community id
+        response = request('post', '/community/edit_community', view, {'community_id':1000}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid community id')
+
+        # test permission denied
+        response = request('post', '/community/edit_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test empty data
+        response = request('post', '/community/edit_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
+
+        # test success status
+        data = {
+            'community_id': community.id,
+            'image': open('manage.py'),
+            'title': 'test community2',
+            'description': 'It is a test community2',
+            'tags': f'[{tag.id}, {tag.id+1}, 1000]',
+        }
+        response = request('post', '/community/edit_community', view, data, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
+        community.refresh_from_db()
+        self.assertEqual(community.title, 'test community2')
+        self.assertEqual(community.description, 'It is a test community2')
+
 
         
 
