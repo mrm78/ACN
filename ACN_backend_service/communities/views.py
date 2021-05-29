@@ -87,6 +87,7 @@ class create_event(APIView):
         # check begin_time format
         try:
             begin_time = timezone.datetime.strptime(req.POST['begin_time'], "%Y-%m-%dT%H:%M").replace(tzinfo=pytz.timezone('UTC'))
+            print(begin_time,'!!!!!!!!!!!!!')
         except Exception as e:
             return Response({'status':'failed', 'error':'invalid begin time format', 'a':str(e)})
         # create event
@@ -280,3 +281,42 @@ class edit_community(APIView):
             community.image = image
         community.save()
         return Response({'status':'success'})
+
+
+class stories(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, req):
+        # get joined_communities and created_communities of user
+        communities = list(req.user.joined_communities.all())
+        communities.extend(list(req.user.created_communities.all()))
+        # get related events that are not passed
+        events = []
+        for com in communities:
+            events.extend(list(com.event_set.filter(active=True, begin_time__gt=timezone.now())))
+        events = EventSerializer(events, many=True).data
+        return Response(events)
+
+
+class rate_community(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        # check community id
+        community = Community.objects.filter(id=req.POST['community_id'])
+        if not community:
+            return Response({'status':'failed', 'error':'invalid community id'})
+        community = community[0]
+        # check permission
+        if req.user not in community.participants.all() and req.user != community.creator:
+            return Response({'status':'failed', 'error':'permission denied'})
+        # check rate value
+        if float(req.POST['value']) < 0 or float(req.POST['value']) > 5:
+            return Response({'status':'failed', 'error':'invalid value'})
+        # check duplicated rate
+        rate = Community_rate.objects.filter(user=req.user, community=community)
+        if rate:
+            rate[0].value = float(req.POST['value'])
+            rate[0].save()
+        else:
+            Community_rate(user=req.user, community=community, value=float(req.POST['value'])).save()
+        community.update_rate()
+        return Response({'status':'success', 'average_rate':community.rate})

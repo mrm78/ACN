@@ -4,7 +4,8 @@ from communities.views import *
 from accounts.models import User
 from rest_framework.authtoken.models import Token
 from django.test.client import RequestFactory
-import json
+import json, datetime
+from django.utils import timezone
 
 
 # use request factory instead of client
@@ -50,7 +51,8 @@ def build_event(community_id):
         title='test community',
         description='It is a test community',
         creator=User.objects.get(username='testuser'),
-        community=Community.objects.get(id=community_id)
+        community=Community.objects.get(id=community_id),
+        begin_time=timezone.now() + datetime.timedelta(days=1)
     )
 
 
@@ -217,6 +219,7 @@ class CommunityTest(APITestCase):
     def test_community_posts(self):
         token = create_user()
         community = build_community()
+        post = self.build_post(community.id, token)
         view = community_posts.as_view()
 
         # test invalid community id
@@ -225,7 +228,7 @@ class CommunityTest(APITestCase):
 
         # test success status
         response = request('get', '/community/community_posts', view, {'community_id':community.id})
-        self.assertEqual(len(response), 0)
+        self.assertEqual(len(response), 1)
 
     
     def test_post_comment(self):
@@ -351,7 +354,28 @@ class CommunityTest(APITestCase):
         self.assertEqual(community.description, 'It is a test community2')
 
 
+    def test_rate_community(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        tag = create_tags()[0]
+        view = rate_community.as_view()
+
+        # test invalid community id
+        response = request('post', '/community/rate_community', view, {'community_id':1000}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid community id')
+
+        # test permission denied
+        response = request('post', '/community/rate_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test invalid value data
+        response = request('post', '/community/rate_community', view, {'community_id':community.id, 'value':25}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid value')
         
+        # test success status
+        response = request('post', '/community/rate_community', view, {'community_id':community.id, 'value':3}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
 
 
 
@@ -453,3 +477,16 @@ class EventTest(APITestCase):
         community.participants.add(token2.user)
         response = request('post', '/community/join_event', view, {'event_id':event.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
         self.assertEqual(response['status'], 'success')
+
+
+    def test_stories(self):
+        token = create_user()
+        community = build_community()
+        event = build_event(community.id)
+        view = stories.as_view()
+
+         # test success status
+        response = request('get', '/community/stories', view, {}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        print('!!!!!!', response)
+        self.assertEqual(response[0]['title'], event.title)
+        self.assertEqual(response[0]['description'], event.description)

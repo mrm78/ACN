@@ -8,6 +8,7 @@ class Community(models.Model):
     participants = models.ManyToManyField('accounts.User', related_name='joined_communities')
     creator = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='created_communities')
     creation_date = models.DateTimeField(auto_now_add=True)
+    rate = models.FloatField(default=0)
 
     def creator_info(self):
         return self.creator.short_info()
@@ -17,6 +18,12 @@ class Community(models.Model):
 
     def number_of_participants(self):
         return self.participants.count() + 1
+
+    def update_rate(self):
+        rates =  [rate.value for rate in self.rates.all()]
+        if rates:
+            self.rate = sum(rates) / len(rates)
+            self.save()
 
 
 
@@ -34,8 +41,9 @@ class Event(models.Model):
     image = models.ImageField(upload_to='events', null=True, blank=True)
     creator = models.ForeignKey('accounts.User', on_delete=models.CASCADE, related_name='created_events')
     participants = models.ManyToManyField('accounts.User', related_name='joined_events')
-    begin_time = models.DateTimeField(auto_now_add=True)
+    begin_time = models.DateTimeField()
     creation_date = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
 
     def creator_info(self):
         return self.creator.short_info()
@@ -61,6 +69,7 @@ class Post(models.Model):
     def number_of_comments(self):
         return self.post_comment_set.count()
 
+
 class Post_comment(models.Model):
     text = models.TextField()
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -69,3 +78,9 @@ class Post_comment(models.Model):
 
     def creator_info(self):
         return self.user.short_info()
+
+
+class Community_rate(models.Model):
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
+    community = models.ForeignKey(Community, on_delete=models.CASCADE, related_name='rates')
+    value = models.FloatField()

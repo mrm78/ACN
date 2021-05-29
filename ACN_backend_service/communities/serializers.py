@@ -9,7 +9,26 @@ class TagSerializer(serializers.ModelSerializer):
 class CommunitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Community
-        fields = ['id', 'title', 'description', 'number_of_participants', 'creation_date', 'image', 'creator_info', 'tags_info']
+        fields = ['id', 'title', 'description', 'number_of_participants', 'creation_date', 'image', 'rate', 'creator_info', 'tags_info']
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ['id', 'title', 'description', 'number_of_participants', 'community','image', 'creation_date', 'begin_time', 'creator_info']
+
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ['id', 'caption', 'image', 'date', 'number_of_likes', 'number_of_comments', 'creator_info']
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post_comment
+        fields = ['id', 'text', 'creator_info', 'date', 'post']
+
+
 
 def check_community_membership(communities_data, user, many=False):
     if not many:
@@ -26,23 +45,9 @@ def check_community_membership(communities_data, user, many=False):
     return communities_data
 
 
-class EventSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Event
-        fields = ['id', 'title', 'description', 'number_of_participants', 'community','image', 'creation_date', 'begin_time', 'creator_info']
-
-class PostSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = ['id', 'caption', 'image', 'date', 'number_of_likes', 'number_of_comments', 'creator_info']
-
 def check_post_like(posts_data, user):
     for post_data in posts_data:
         post = Post.objects.get(id=post_data['id'])
         post_data['liked'] = 'true' if user in post.likes.all() else 'false'
     return posts_data
-
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post_comment
-        fields = ['id', 'text', 'creator_info', 'date', 'post']
+    
