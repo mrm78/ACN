@@ -12,10 +12,16 @@ class CommunitySerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description', 'number_of_participants', 'creation_date', 'image', 'rate', 'creator_info', 'tags_info']
 
 
+class StorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ['id', 'title', 'image', 'community_info']
+
+
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ['id', 'title', 'description', 'number_of_participants', 'community','image', 'creation_date', 'begin_time', 'creator_info']
+        fields = ['id', 'title', 'description', 'number_of_participants', 'community_info','image', 'creation_date', 'begin_time', 'creator_info']
 
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,3 +57,14 @@ def check_post_like(posts_data, user):
         post_data['liked'] = 'true' if user in post.likes.all() else 'false'
     return posts_data
     
+
+def check_stories_seen(events_data, user):
+    seen_events, unseen_events = [], []
+    for event_data in events_data:
+        event = Event.objects.get(id=event_data['id'])
+        if user in event.seen.all():
+            event_data['is_seen'] = 'true'
+        else:
+            event_data['is_seen'] = 'false'
+    events_data = sorted(events_data,key = lambda event: event['is_seen'])
+    return events_data

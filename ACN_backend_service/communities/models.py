@@ -44,12 +44,20 @@ class Event(models.Model):
     begin_time = models.DateTimeField()
     creation_date = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
+    seen = models.ManyToManyField('accounts.User', related_name='seen_events')
 
     def creator_info(self):
         return self.creator.short_info()
 
     def number_of_participants(self):
         return self.participants.count() + 1
+
+    def community_info(self):
+        return {
+            'id': self.community.id,
+            'title': self.community.title,
+            'image': self.community.image.url if self.community.image else None,
+        }
 
 
 class Post(models.Model):

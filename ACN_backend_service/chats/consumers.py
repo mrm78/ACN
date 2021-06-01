@@ -9,7 +9,6 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope['user']
         self.community = self.scope['community']
-        print('!!!!!!!!!!!!!', self.user)
         if self.community and (self.user in self.community.participants.all() or self.community.creator==self.user):
             self.room_group_name = f'community_group_{self.community.id}'
 

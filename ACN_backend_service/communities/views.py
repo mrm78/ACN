@@ -87,7 +87,6 @@ class create_event(APIView):
         # check begin_time format
         try:
             begin_time = timezone.datetime.strptime(req.POST['begin_time'], "%Y-%m-%dT%H:%M").replace(tzinfo=pytz.timezone('UTC'))
-            print(begin_time,'!!!!!!!!!!!!!')
         except Exception as e:
             return Response({'status':'failed', 'error':'invalid begin time format', 'a':str(e)})
         # create event
@@ -293,8 +292,21 @@ class stories(APIView):
         events = []
         for com in communities:
             events.extend(list(com.event_set.filter(active=True, begin_time__gt=timezone.now())))
-        events = EventSerializer(events, many=True).data
+        events = StorySerializer(events, many=True).data
+        events = check_stories_seen(events, req.user)
         return Response(events)
+
+class story_info(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, req):
+        # check event id
+        event = Event.objects.filter(id=req.GET['event_id'])
+        if not event:
+            return Response({'status':'failed', 'error':'invalid event id'})
+        event = event[0]
+        event.seen.add(req.user)
+        event = EventSerializer(event)
+        return Response(event.data)
 
 
 class rate_community(APIView):

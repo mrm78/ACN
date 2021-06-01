@@ -377,6 +377,10 @@ class CommunityTest(APITestCase):
         response = request('post', '/community/rate_community', view, {'community_id':community.id, 'value':3}, HTTP_AUTHORIZATION=f'Token {token.key}')
         self.assertEqual(response['status'], 'success')
 
+        # test duplicate rate
+        response = request('post', '/community/rate_community', view, {'community_id':community.id, 'value':3}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
+
 
 
 
@@ -435,7 +439,6 @@ class EventTest(APITestCase):
         self.assertEqual(response['id'], event.id)
         self.assertEqual(response['title'], event.title)
         self.assertEqual(response['description'], event.description)
-        self.assertEqual(response['community'], community.id)
 
           
     def test_event_info(self):
@@ -485,8 +488,27 @@ class EventTest(APITestCase):
         event = build_event(community.id)
         view = stories.as_view()
 
-         # test success status
+        # test success status
         response = request('get', '/community/stories', view, {}, HTTP_AUTHORIZATION=f'Token {token.key}')
-        print('!!!!!!', response)
         self.assertEqual(response[0]['title'], event.title)
-        self.assertEqual(response[0]['description'], event.description)
+
+    
+    def test_story_info(self):
+        token = create_user()
+        community = build_community()
+        event = build_event(community.id)
+        view = story_info.as_view()
+
+        # test invalid event id
+        response = request('get', '/community/story_info', view, {'event_id':100}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid event id')
+
+        # test success status
+        response = request('get', '/community/story_info', view, {'event_id':event.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['title'], event.title)
+        self.assertEqual(response['description'], event.description)
+
+        # test success status (check is_seen) 
+        view = stories.as_view()
+        response = request('get', '/community/stories', view, {}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response[0]['is_seen'], 'true')
