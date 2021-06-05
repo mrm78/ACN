@@ -10,4 +10,4 @@ class SelfUserSerializer(serializers.ModelSerializer):
 class OtherUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'name', 'username', 'bio', 'avatar']
+        fields = ['id', 'name', 'username', 'bio', 'avatar', 'pretty_gender', 'age']

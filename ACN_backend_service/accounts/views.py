@@ -112,6 +112,14 @@ class myself_info(APIView):
         user = SelfUserSerializer(req.user)
         return Response(user.data)
 
+class user_info(APIView):
+    def get(self, req):
+        user = User.objects.filter(username=req.GET.get('username'))
+        if not user:
+            return JsonResponse({'status':'failed', 'error':'invalid username'})
+        user = SelfUserSerializer(user[0])
+        return Response(user.data)
+
 
 
 class update_user_info(APIView):
