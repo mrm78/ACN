@@ -1,5 +1,9 @@
 version: '3.3'
 services:
+
+  redis:
+    image: "redis:alpine"
+
   db:
     image: postgres
     container_name: db
@@ -22,6 +26,8 @@ services:
     ports:
       - '${BACKEND_PORT}:8000'
     entrypoint: /entrypoint.sh
+    volumes:
+      - ./ACN_backend_service/ACN2/media:/app/ACN2/media
     command: gunicorn ACN2.wsgi --bind 0.0.0.0:8000
     depends_on:
       - db
@@ -69,7 +75,7 @@ services:
     ports:
       - '${CHAT_PORT}:8000'
     entrypoint: /entrypoint.sh
-    command: gunicorn ACN2.asgi --bind 0.0.0.0:8000
+    command: daphne ACN2.asgi:application --bind 0.0.0.0 -p 8000
     depends_on:
       - db
 
