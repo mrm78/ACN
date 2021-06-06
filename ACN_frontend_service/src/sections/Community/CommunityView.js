@@ -177,7 +177,9 @@ export default function Community(props) {
                         /></div>
                 <div className="bio">
                     <div>
-                    <h4>{userinfo[0].title}</h4>{Butt(isjoin,setIsjoin,id,setParti,parti)}</div>
+                    <h4 style={{width: '160px', whiteSpace: 'normal', overflow: 'hidden'
+                    , textOverflow: 'ellipsis'}}>{userinfo[0].title}
+                    </h4>{userinfo[0].is_admin=="true"?"":Butt(isjoin,setIsjoin,id,setParti,parti)}</div>
                     <div className="participants" style={{color:"rgb(159 159 159)"}}>
                         <p >{parti} Participant</p></div>
                     <div className="desc">
