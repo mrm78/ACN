@@ -15,7 +15,7 @@ ReactDOM.render(
   <Router>
     <Route exact path="/" component={Landingpage} />
     <Route exact path="/profileedit" component={EditProfile} />
-    <Route exact path="/Community/:comId" component={Community} />
+    <Route exact path="/CommunityView/:comId" component={Community} />
     <Route exact path="/Chat/:comId" component={Chat} />
     <Route exact path="/home" component={Home} />
   </Router>,
