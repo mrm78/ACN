@@ -12,6 +12,9 @@
     height: 100vh;
   }
 }
+.messageLine {
+  white-space: pre;
+}
 .chatMessagesContainer {
   height: 100vh;
   background-image: url("../img/back2.jpg");
