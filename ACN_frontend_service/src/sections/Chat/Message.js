@@ -148,7 +148,7 @@ export default function Message(props) {
             ,borderRadius: '20px 20px 0px 0px', position:'absolute'}}>
             {repT}
               </div></a>):('')}
-            <Grid item lg={12} xs={12} id={props.id}>
+            <Grid item lg={12} xs={12} id={props.id} className="messageLine">
               {props.message}
             </Grid>
           </Grid>
