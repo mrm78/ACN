@@ -6,7 +6,7 @@ test:
   tags:
     - test
   script:
-    - docker-compose -f docker-compose.prod.yml up -d db test_web test_frontend
+    - ./ci.sh
   only:
     - master
     - develop
