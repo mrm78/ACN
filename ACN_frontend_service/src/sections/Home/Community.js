@@ -69,7 +69,7 @@ export default function Community(props){
 
     {props.MyC && props.MyC.map((tile) => {
         
-        const TTData= <GridListTile onClick={()=>history.push(`/community/${tile.id}`)} style={{cursor:"pointer"}} key={tile.id} className="Eimg">
+        const TTData= <GridListTile onClick={()=>history.push(`/CommunityView/${tile.id}`)} style={{cursor:"pointer"}} key={tile.id} className="Eimg">
         
         <img style={{transition:'all .6s ease'}}  src={tile.image?Const.baseUrl+tile.image:`${Com}`} alt={tile.title}  />
          <GridListTileBar
