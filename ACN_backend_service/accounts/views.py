@@ -160,7 +160,10 @@ class update_user_info(APIView):
         if req.FILES.get('avatar'):
             user.avatar = req.FILES.get('avatar')
         if req.POST.get('age'):
-            user.age = int(req.POST.get('age'))
+            try:
+                user.age = int(req.POST.get('age'))
+            except:
+                pass
         if req.POST.get('gender'):
             user.gender = req.POST.get('gender') == 'male'
         if req.POST.get('bio'):
