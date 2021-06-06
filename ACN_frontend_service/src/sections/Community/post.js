@@ -17,12 +17,20 @@ import {
     Paper,
     Avatar,
   } from "@material-ui/core";
-
+import CommentShow from "./CommentShow"
 
 function Post(props){
   const [likes , setLikes] = useState(props.pos.number_of_likes)
+  const [Comments , setComments] = useState(props.pos.number_of_comments)
   const [liked , setLiked] = useState(props.pos.liked)
+  const [dialog, setDialog] = useState(false);
   // let liked = pos.liked
+
+
+  const handleclick = async (Id) =>{
+      setDialog(true)     
+     
+    }
 
   const like=(id,likeed)=>{
     axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
@@ -59,13 +67,15 @@ function Post(props){
     <ul className="utility-list">
     <li style={{cursor:"pointer"}} onClick={()=> like(props.pos.id,liked)}>
       <span className="licon icon-like"></span><a href="#">{likes}</a></li>
-      <li><span className="licon icon-com"></span><a href="#">{props.pos.number_of_comments}</a></li>
+      <li style={{cursor:"pointer"}} onClick={()=> handleclick(props.pos.id)}><span className="licon icon-com"></span>
+      <a href="#">{Comments}</a></li>
       <li><span className="licon icon-dat"></span>{props.pos.date.slice(0,10)}</li>
     </ul>
   </div>
   <div className="gradient-overlay"></div>
   <div className="color-overlay"></div>
 </div>
+{<CommentShow count={Comments} setcount={setComments} id={props.pos.id} open={dialog} setOpen={setDialog}/>}
 </Grid>
 )};
 

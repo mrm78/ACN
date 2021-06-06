@@ -40,6 +40,7 @@ export default function Home() {
     const [userinfo,setUserinfo] = useState({Avatar:'',name:'',username:''});
     const [MyC,setMyC] = useState(null);
     const [MyC2,setMyC2] = useState(null);
+    const [story,setStory] = useState([]);
     const [value, setValue] = React.useState(0);
     const [Loader, setLoader] = useState(true);
     const history = useHistory();
@@ -80,6 +81,9 @@ export default function Home() {
           axios.get(`${Const.baseUrl}/account/myself_info`).then((response) => {
             setUserinfo(response.data);
           });
+          axios.get(`${Const.baseUrl}/community/stories`).then((response) => {
+            setStory(response.data);
+          })
           axios.get(`${Const.baseUrl}/community/all_communities`, formData).then((res) => {
                    
             setMyC(res.data);
@@ -201,7 +205,7 @@ export default function Home() {
             </div>
             <div className="h_body">
             <div className="h_hbody">
-                {Story}
+                {<Story story={story}/>}
             </div>
             <ThemeProvider theme={theme}>
             <Paper square>

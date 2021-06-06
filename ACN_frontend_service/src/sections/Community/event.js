@@ -53,7 +53,7 @@ function Event(props){
     <a href="#"><Person style={{marginBottom:"-2px", fontSize:"15px" ,color:"white" }}/>
     {" " +props.eve.creator_info.username}</a></li>
     <li className="date"><TodayOutlined style={{marginBottom:"-2px",marginTop:"30px", fontSize:"15px" ,color:"white" }}/>
-      {" "+ props.eve.begin_time.slice(0,10).replaceAll('-',' ')+" | "+props.eve.begin_time.slice(11,16)}</li>
+      {" "+ props.eve.begin_time.slice(0,10).replace(/-/g,' ')+" | "+props.eve.begin_time.slice(11,16)}</li>
         <li className="tags2"><GroupAdd style={{marginBottom:"-2px",marginTop:"30px", fontSize:"19px" ,color:"white" }}/>
         {" "+parti}
         </li>
