@@ -30,7 +30,7 @@ services:
     build: 
       context: .
       dockerfile: ./docker/back/Dockerfile
-    image: test_web:${TAG_VERSION}
+    image: test_web
     container_name: test_web
     env_file:
       - ./docker/back/.env
@@ -52,8 +52,24 @@ services:
     build: 
       context: ./ACN_frontend_service
       dockerfile: ../docker/front/Dockerfile.test
-    image: test_frontend:${TAG_VERSION}
+    image: test_frontend
     container_name: test_frontend
+
+  chat:
+    build: 
+      context: .
+      dockerfile: ./docker/back/Dockerfile
+    image: chat:${TAG_VERSION}
+    container_name: chat
+    restart: unless-stopped
+    env_file:
+      - ./docker/back/.env
+    ports:
+      - '${CHAT_PORT}:8000'
+    entrypoint: /entrypoint.sh
+    command: gunicorn ACN2.asgi --bind 0.0.0.0:8000
+    depends_on:
+      - db
 
   swagger:
     image: swaggerapi/swagger-ui
