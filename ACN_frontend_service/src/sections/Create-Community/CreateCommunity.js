@@ -173,7 +173,7 @@ export default function CreateCommunity(props) {
       }).then((res) => {
         if (res.status === 200) {
           if (res.data.status === "success") {
-            history.push(`/community/${res.data.id}`)
+            history.push(`/CommunityView/${res.data.id}`)
           } else {
             if (res.data.error === "empty title") {
               setAlertMessage("You have to enter a title.");
