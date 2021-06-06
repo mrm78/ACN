@@ -180,7 +180,7 @@ export default function Community(props) {
             </div>
             <div className="h_body2">
             <div className="h_hbody2">
-                <div className="profile1">
+                <div className="profile11">
                     <Avatar
                         src={`${url}`}
                         className="img22"
