@@ -410,7 +410,7 @@ paths:
 
 
   /account/myself_info:
-    post:
+    get:
       tags:
         - Account
       summary: Login User
@@ -451,6 +451,66 @@ paths:
                 example: <url>
               
 
+  /account/user_info:
+    get:
+      tags:
+        - Account
+      summary: get user info
+      description: get user info
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: user_info
+        schema:
+          type: object
+          properties:
+            username:
+              type: string
+              example: mrm78
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 2
+              name:
+                type: string
+                example: ali
+              username:
+                type: string
+                example: mrm78
+              email:
+                type: string
+                example: acn@gmail.com
+              bio:
+                type: string
+                example: hi guys!
+              pretty_gender:
+                type: string
+                example: male or female
+              age:
+                type: int
+                example: 21
+              avatar:
+                type: string
+                example: <url>
+        200-2:
+          description: failed 
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid username             
 
 
 

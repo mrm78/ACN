@@ -112,6 +112,14 @@ class myself_info(APIView):
         user = SelfUserSerializer(req.user)
         return Response(user.data)
 
+class user_info(APIView):
+    def get(self, req):
+        user = User.objects.filter(username=req.GET.get('username'))
+        if not user:
+            return JsonResponse({'status':'failed', 'error':'invalid username'})
+        user = SelfUserSerializer(user[0])
+        return Response(user.data)
+
 
 
 class update_user_info(APIView):
@@ -152,7 +160,10 @@ class update_user_info(APIView):
         if req.FILES.get('avatar'):
             user.avatar = req.FILES.get('avatar')
         if req.POST.get('age'):
-            user.age = int(req.POST.get('age'))
+            try:
+                user.age = int(req.POST.get('age'))
+            except:
+                pass
         if req.POST.get('gender'):
             user.gender = req.POST.get('gender') == 'male'
         if req.POST.get('bio'):

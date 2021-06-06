@@ -188,6 +188,7 @@ class CommunityTest(APITestCase):
 
         # test success status
         community.participants.add(token2.user)
+        event = build_event(community.id)
         response = request('post', '/community/leave_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
         self.assertEqual(response['status'], 'success')
 

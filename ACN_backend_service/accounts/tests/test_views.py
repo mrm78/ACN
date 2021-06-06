@@ -188,6 +188,31 @@ class UserTest(APITestCase):
         self.assertEqual(response.get('email'), 'testuser@acn.com')
         self.assertEqual(response.get('pretty_gender'), 'male')
         self.assertEqual(response.get('age'), 20)
+
+    def test_user_info(self):
+        # create user
+        user = User.objects.create_user(
+            username='testuser',
+            email='testuser@acn.com',
+            name='test',
+            password='123456789',
+        )
+        user.gender = True
+        user.age = 20
+        user.save()
+        token = Token.objects.create(user=user)
+
+        # test invalid username
+        response = self.client.get('/account/user_info', data={'username':''}, HTTP_AUTHORIZATION=f'Token {token.key}').json()
+        self.assertEqual(response.get('error'), 'invalid username')
+
+        # test user_info
+        response = self.client.get('/account/user_info', data={'username':'testuser'}, HTTP_AUTHORIZATION=f'Token {token.key}').json()
+        self.assertEqual(response.get('username'), 'testuser')
+        self.assertEqual(response.get('name'), 'test')
+        self.assertEqual(response.get('email'), 'testuser@acn.com')
+        self.assertEqual(response.get('pretty_gender'), 'male')
+        self.assertEqual(response.get('age'), 20)
         
 
     def test_update_user_info(self):

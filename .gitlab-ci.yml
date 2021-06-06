@@ -1,21 +1,13 @@
 stages:
   - test
-  - build
 
 test:
   stage: test
   tags:
     - test
   script:
-    - docker-compose -f docker-compose.prod.yml up -d db test_web 
+    - ./ci.sh
   only:
     - master
+    - develop
 
-build:
-  stage: build
-  tags:
-    - build
-  script:
-    - docker-compose -f docker-compose.prod.yml up -d
-  only:
-    - master

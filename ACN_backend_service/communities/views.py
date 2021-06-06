@@ -148,6 +148,8 @@ class leave_community(APIView):
             return Response({'status':'failed', 'error':'invalid community id'})
         if not req.user in community[0].participants.all():
             return Response({'status':'failed', 'error':'not already a member'})
+        for event in community[0].event_set.all():
+            event.participants.remove(req.user)
         community[0].participants.remove(req.user)
         return Response({'status':'success'})
 

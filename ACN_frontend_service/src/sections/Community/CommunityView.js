@@ -156,9 +156,19 @@ export default function Community(props) {
             <div className="h_header2"
              style={{backgroundImage: `url(${url})`}}>
 
+                    <div className="loz2">
 
-                                <div className="loz2">
                     <ul className="smain_loz">
+                    <li className="slozac3">
+                    <ul className="smain_loz">
+                    <li className="slozac30" onClick={() => history.push(`/chat/${props.match.params.comId}`)}>
+                    <div className="stitle"><h6>Community Chat</h6></div>
+                    <div className="sbg4"></div>
+                    <p className="ffont sD_label3"></p>
+
+                    </li>
+                    </ul>
+                    </li>
                     <li className="slozac4" onClick={() => history.push("/home")}>
                     <div className="sslider sslozac4">
 
