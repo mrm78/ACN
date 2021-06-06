@@ -1,13 +1,6 @@
 stages:
   - test
 
-before_script:
-- apk update
-- apk upgrade
-- apk add python python-dev py-pip build-base
-- pip install docker-compose
-
-
 test:
   stage: test
   tags:
