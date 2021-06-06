@@ -1,16 +1,7 @@
-image: docker:latest
-
-variables:
-  DOCKER_DRIVER: overlay
-
-services:
-- docker:dind
-
 stages:
   - test
 
 before_script:
-- docker info
 - apk update
 - apk upgrade
 - apk add python python-dev py-pip build-base
