@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.8
 RUN pip install --upgrade pip
 WORKDIR /app
 COPY ./ACN_backend_service/requirements.txt /app/requirements.txt

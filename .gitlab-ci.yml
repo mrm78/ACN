@@ -1,0 +1,13 @@
+stages:
+  - test
+
+test:
+  stage: test
+  tags:
+    - test
+  script:
+    - ./ci.sh
+  only:
+    - master
+    - develop
+

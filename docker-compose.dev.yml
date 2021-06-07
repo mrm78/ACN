@@ -17,24 +17,29 @@ services:
     container_name: backend_app
     restart: unless-stopped
     env_file:
-      - ./docker/back/backend.env
+      - ./docker/back/.env
     volumes: 
       - ./ACN_backend_service:/app
-    command: ./scripts/run.sh
-    network_mode: host
+    ports:
+      - '${BACKEND_PORT}:8000'
+    entrypoint: /entrypoint.sh
+    command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
 
   frontend:
     build: 
-      context: .
-      dockerfile: ./docker/front/Dockerfile
+      context: ./ACN_frontend_service
+      dockerfile: ../docker/front/Dockerfile.dev
     container_name: frontend
-    restart: unless-stopped
+    env_file:
+      - ./docker/front/.env
     volumes: 
       - ./ACN_frontend_service:/app
-    command: npm start
-    network_mode: host
+      - /app/node_modules
+    ports:
+      - '${FRONTEND_PORT}:3000'
+    stdin_open: true
 
   swagger:
     image: swaggerapi/swagger-ui

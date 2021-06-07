@@ -1,5 +1,9 @@
 version: '3.3'
 services:
+
+  redis:
+    image: "redis:alpine"
+
   db:
     image: postgres
     container_name: db
@@ -18,24 +22,62 @@ services:
     container_name: web
     restart: unless-stopped
     env_file:
-      - ./docker/back/backend.env
+      - ./docker/back/.env
     ports:
       - '${BACKEND_PORT}:8000'
     entrypoint: /entrypoint.sh
+    volumes:
+      - ./ACN_backend_service/ACN2/media:/app/ACN2/media
     command: gunicorn ACN2.wsgi --bind 0.0.0.0:8000
+    depends_on:
+      - db
+  
+  test_web:
+    build: 
+      context: .
+      dockerfile: ./docker/back/Dockerfile
+    image: test_web
+    container_name: test_web
+    env_file:
+      - ./docker/back/.env
+    command: python manage.py test
     depends_on:
       - db
   
   frontend:
     build: 
-      context: .
-      dockerfile: ./docker/front/Dockerfile
+      context: ./ACN_frontend_service
+      dockerfile: ../docker/front/Dockerfile.prod
     image: frontend_app:${TAG_VERSION}
     container_name: frontend
     restart: unless-stopped
+    env_file:
+      - ./docker/front/.env
     ports:
       - '${FRONTEND_PORT}:3000'
-    command: npm run build
+
+  test_frontend:
+    build: 
+      context: ./ACN_frontend_service
+      dockerfile: ../docker/front/Dockerfile.test
+    image: test_frontend
+    container_name: test_frontend
+
+  chat:
+    build: 
+      context: .
+      dockerfile: ./docker/back/Dockerfile
+    image: chat:${TAG_VERSION}
+    container_name: chat
+    restart: unless-stopped
+    env_file:
+      - ./docker/back/.env
+    ports:
+      - '${CHAT_PORT}:8000'
+    entrypoint: /entrypoint.sh
+    command: daphne ACN2.asgi:application --bind 0.0.0.0 -p 8000
+    depends_on:
+      - db
 
   swagger:
     image: swaggerapi/swagger-ui

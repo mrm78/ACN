@@ -1,3 +1,4 @@
+from rest_framework import response
 from accounts.models import User
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -10,6 +11,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import re, random
 from django.utils import timezone
+from .serializers import *
 
 
 
@@ -102,3 +104,70 @@ class is_login(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, req):
         return Response({'status':'yes'})
+
+
+class myself_info(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, req):
+        user = SelfUserSerializer(req.user)
+        return Response(user.data)
+
+class user_info(APIView):
+    def get(self, req):
+        user = User.objects.filter(username=req.GET.get('username'))
+        if not user:
+            return JsonResponse({'status':'failed', 'error':'invalid username'})
+        user = SelfUserSerializer(user[0])
+        return Response(user.data)
+
+
+
+class update_user_info(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        user = req.user
+        #checking username
+        if req.POST.get('username'):
+            if req.user.username != req.POST.get('username'):
+                check_user = User.objects.filter(username=req.POST.get('username'))
+                if check_user:
+                    if check_user[0].verified_email:
+                        return JsonResponse({'status':'failed', 'error':'not available username'})
+                    check_user[0].delete()
+            user.username = req.POST.get('username')
+        #checking email
+        if req.POST.get('email'):
+            if req.user.email != req.POST.get('email'):
+                check_user = User.objects.filter(email=req.POST.get('email'))
+                if check_user:
+                    if check_user[0].verified_email:
+                        return JsonResponse({'status':'failed', 'error':'not available email'})
+                    check_user[0].delete()
+            user.email = req.POST.get('email')
+        #checking password
+        if req.POST.get('old_password'):
+            if user.check_password(req.POST.get('old_password')):
+                if req.POST.get('new_password'):
+                    user.set_password(req.POST.get('new_password'))
+                else:
+                    return JsonResponse({'status':'failed', 'error':'invalid new password'})
+            else:
+                return JsonResponse({'status':'failed', 'error':'invalid old password'})
+        if req.POST.get('name'):
+            user.name = req.POST.get('name')
+        if req.POST.get('avatar') == 'delete':
+            user.avatar = None
+        if req.FILES.get('avatar'):
+            user.avatar = req.FILES.get('avatar')
+        if req.POST.get('age'):
+            try:
+                user.age = int(req.POST.get('age'))
+            except:
+                pass
+        if req.POST.get('gender'):
+            user.gender = req.POST.get('gender') == 'male'
+        if req.POST.get('bio'):
+            user.bio = req.POST.get('bio')
+        user.save()
+        user_info = SelfUserSerializer(user)
+        return Response(user_info.data)

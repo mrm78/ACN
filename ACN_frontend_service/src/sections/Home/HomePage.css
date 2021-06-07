@@ -15,6 +15,9 @@
 
 }
 .profpage{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     top: 70px;
     left: 10px;
     position: relative;
@@ -86,4 +89,10 @@
     .h_hbody{
         height: 90px;
     }
+}
+.loader{
+    height: 180px;
+    width: 180px;
+    background-size: cover;
+    background-image: url(../../static/loader.gif)
 }

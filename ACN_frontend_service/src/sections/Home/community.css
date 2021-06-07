@@ -1,0 +1,51 @@
+.METab{
+    z-index: 1;
+    position: absolute;
+    padding: inherit;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 50%;
+    background-color: rgb(206, 64, 64);
+    transition: left .2s ease;
+    box-shadow: 0px 0px 4px 2px rgba(0,0,0,.20);
+}
+.METab1{
+    z-index: 1;
+    position: absolute;
+    padding: inherit;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    width: 50%;
+    background-color: rgb(206, 64, 64);
+    transition:left .2s ease;
+    box-shadow: 0px 0px 4px 2px rgba(0,0,0,.20);
+}
+.Eimg{
+    opacity: .5;
+    transition:all .6s ease;
+    transform-style: preserve-3d;
+}
+.Eimg:hover{
+    opacity: 1;
+    transform: scale(1.1);
+}
+.add{
+    opacity: 1;
+    
+}
+.addbtn:hover .add{
+    opacity: 0;
+    transform: rotate(-90deg);
+}
+.add1{
+    
+    position: absolute;
+    left: 20px;
+    opacity: 0;
+}
+.addbtn:hover .add1{
+    opacity: 1;
+    transform: rotate(-90deg);
+}

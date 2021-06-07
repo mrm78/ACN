@@ -86,8 +86,7 @@ export default function Login(props) {
           if (res.status === 200) {
             if (res.data.status === "success") {
               localStorage.setItem("token", res.data.token);
-              // history.push(`/home/${props.username}`);
-              window.location.reload();
+              history.push("./home");
             } else {
               setAlertMessage("Code is not valid.");
               setOpen(true);
