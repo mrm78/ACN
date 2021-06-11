@@ -47,7 +47,7 @@ class create_community(APIView):
             
 class all_communities(APIView):
     def get(self, req):
-        communities = Community.objects.all()
+        communities = Community.objects.all().order_by('-id')
         communities = CommunitySerializer(communities, many=True).data
         communities = check_community_membership(communities, req.user, many=True)
         return Response(communities)
@@ -63,7 +63,7 @@ class my_communities(APIView):
 
 class community_info(APIView):
     def get(self, req):
-        community = Community.objects.filter(id=req.GET['id'])
+        community = Community.objects.filter(id=req.GET['id']).order_by('-id')
         if not community:
             return Response({'status':'failed', 'error':'invalid community id'})
         community = CommunitySerializer(community[0]).data
@@ -114,7 +114,7 @@ class community_events(APIView):
         community = Community.objects.filter(id=req.GET['community_id'])
         if not community:
             return Response({'status':'failed', 'error':'invalid community id'})
-        c_events = Event.objects.filter(community=community[0])
+        c_events = Event.objects.filter(community=community[0]).order_by('-id')
         c_events = EventSerializer(c_events, many=True)
         return Response(c_events.data)
 
@@ -189,7 +189,7 @@ class community_posts(APIView):
         community = Community.objects.filter(id=req.GET['community_id'])
         if not community:
             return Response({'status':'failed', 'error':'invalid community id'})
-        posts = community[0].post_set.all()
+        posts = community[0].post_set.all().order_by('-id')
         posts = PostSerializer(posts, many=True).data
         posts = check_post_like(posts, req.user)
         return Response(posts)
@@ -293,7 +293,10 @@ class stories(APIView):
         # get related events that are not passed
         events = []
         for com in communities:
-            events.extend(list(com.event_set.filter(active=True, begin_time__gt=timezone.now())))
+            for event in  com.event_set.filter(active=True, begin_time__gt=timezone.now()):
+                if event not in events:
+                    events.append(event)
+        events = sorted(events,key = lambda event: -event.id)
         events = StorySerializer(events, many=True).data
         events = check_stories_seen(events, req.user)
         return Response(events)

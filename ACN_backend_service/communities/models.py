@@ -10,6 +10,9 @@ class Community(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     rate = models.FloatField(default=0)
 
+    def __str__(self):
+        return f'{str(self.id)}: {self.title}'
+
     def creator_info(self):
         return self.creator.short_info()
 
