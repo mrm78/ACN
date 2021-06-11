@@ -4,6 +4,8 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from chats.models import Message
 
+onlines = {}
+is_typings = {}
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -19,6 +21,24 @@ class ChatConsumer(WebsocketConsumer):
             )
             self.accept()
 
+            # set user online
+            if not onlines.get(self.room_group_name):
+                onlines[self.room_group_name] = []
+            if self.user.username not in onlines[self.room_group_name]:
+                onlines[self.room_group_name].append(self.user.username)
+
+            # send online users
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {'online_users': onlines[self.room_group_name],'type': 'online_users'})
+
+            # send is_typings users
+            if not is_typings.get(self.room_group_name):
+                is_typings[self.room_group_name] = []
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {'is_typing_users': is_typings[self.room_group_name],'type': 'is_typing_users'})
+
             #send previous message
             pre_msgs = [{
                 'id': msg.id,
@@ -33,18 +53,35 @@ class ChatConsumer(WebsocketConsumer):
             'pre_msgs': pre_msgs,
             'type': 'pre_msgs'
             }))
+
         else:
             self.close()
         
         
 
     def disconnect(self, close_code):
-        # Leave room group
         try:
+            # Leave room group
             async_to_sync(self.channel_layer.group_discard)(
                 self.room_group_name,
                 self.channel_name
             )
+
+            # set user offline
+            if self.user.username in onlines[self.room_group_name]:
+                onlines[self.room_group_name].remove(self.user.username)
+            # send online users
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_name,
+                {'online_users': onlines[self.room_group_name],'type': 'online_users'})
+
+            # clear user ins_typing if disconnect and notif others
+            if self.user.username in is_typings[self.room_group_name]:
+                is_typings[self.room_group_name].remove(self.user.username)
+                async_to_sync(self.channel_layer.group_send)(
+                  self.room_group_name,
+                  {'is_typing_users': is_typings[self.room_group_name],'type': 'is_typing_users'})
+
         except:
             pass
 
@@ -86,6 +123,7 @@ class ChatConsumer(WebsocketConsumer):
                 }
             )
 
+
         # delete chat message
         if data.get('type') == 'delete_message':
             try:
@@ -103,6 +141,7 @@ class ChatConsumer(WebsocketConsumer):
             except:
                 pass
 
+
         #edit chat message
         if data.get('type') == 'edit_message':
             try:
@@ -117,6 +156,24 @@ class ChatConsumer(WebsocketConsumer):
             except:
                 pass
 
+        
+        # start_typing
+        if data.get('type') == 'start_typing':
+            if self.user.username not in is_typings[self.room_group_name]:
+                is_typings[self.room_group_name].append(self.user.username)
+                async_to_sync(self.channel_layer.group_send)(
+                  self.room_group_name,
+                  {'is_typing_users': is_typings[self.room_group_name],'type': 'is_typing_users'})
+
+        # end_typing
+        if data.get('type') == 'end_typing':
+            if self.user.username in is_typings[self.room_group_name]:
+                is_typings[self.room_group_name].remove(self.user.username)
+                async_to_sync(self.channel_layer.group_send)(
+                  self.room_group_name,
+                  {'is_typing_users': is_typings[self.room_group_name],'type': 'is_typing_users'})
+
+
 
     # Receive message from room group
     def chat_message(self, message):
@@ -130,5 +187,14 @@ class ChatConsumer(WebsocketConsumer):
     # receive edited message
     def edit_message(self, message):
         self.send(text_data=json.dumps(message))
+
+    # receive online users
+    def online_users(self, message):
+        self.send(text_data=json.dumps(message))
+
+    # receive is_typing users
+    def is_typing_users(self, message):
+        self.send(text_data=json.dumps(message))
+
 
 
