@@ -1622,3 +1622,192 @@ paths:
               error:
                 type: string
                 example: invalid event id
+
+
+  /community/edit_event:
+    post:
+      tags:
+        - Community
+      summary: edit event
+      description: users cat edit a event
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: community info
+        schema:
+          type: object
+          required:
+          - title
+          - description
+          - event_id
+          - image
+          - begin_time
+          properties:
+            title:
+              type: string
+              example: call of duty tricks
+            description:
+              type: string
+              example: all tricks of call of duty
+            event_id:
+              type: integer
+              example: 2
+            image:
+              type: string
+              example: <FILE>
+            begin_time:
+              type: string
+              example: "2021-12-12T14:37"
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+        200-2:
+          description: failed -> invalid event_id
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid event id
+        200-3:
+          description: failed -> permission denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: permission denied
+        200-4:
+          description: failed -> invalid begin time format
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid begin time format
+
+
+  /community/delete_event:
+    post:
+      tags:
+        - Community
+      summary: delete an event by admin
+      description: delete an event by admin
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: event info
+        schema:
+          type: object
+          required:
+          - event_id
+          properties:
+            event_id:
+              type: integer
+              example: 5
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+        200-2:
+          description: failed -> invalid event_id
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid event id
+        200-3:
+          description: failed -> permission denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: permission denied
+
+
+  /community/delete_community:
+    post:
+      tags:
+        - Community
+      summary: delete an community by admin
+      description: delete an community by admin
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: community info
+        schema:
+          type: object
+          required:
+          - community_id
+          properties:
+            community_id:
+              type: integer
+              example: 5
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+        200-2:
+          description: failed -> invalid community_id
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid community id
+        200-3:
+          description: failed -> permission denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: permission denied
