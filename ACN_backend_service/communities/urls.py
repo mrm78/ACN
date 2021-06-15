@@ -27,4 +27,5 @@ urlpatterns = [
     path('edit_event', edit_event.as_view()),
     path('delete_event', delete_event.as_view()),
     path('delete_community', delete_community.as_view()),
+    path('remove_community_participant', remove_community_participant.as_view()),
 ]

@@ -393,13 +393,40 @@ class CommunityTest(APITestCase):
         response = request('post', '/community/delete_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
         self.assertEqual(response['error'], 'permission denied')
 
-        # test invalid event id 
+        # test invalid community id 
         response = request('post', '/community/delete_community', view, {'community_id':0}, HTTP_AUTHORIZATION=f'Token {token.key}')
         self.assertEqual(response['error'], 'invalid community id')
 
         # test success status
         response = request('post', '/community/delete_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
         self.assertEqual(response['status'], 'success')
+
+    
+    def test_remove_community_participant(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        community.participants.add(token2.user)
+        event = build_event(community.id)
+        event.participants.add(token2.user)
+        view = remove_community_participant.as_view()
+
+        # test permission denied
+        response = request('post', '/community/remove_community_participant', view, {'community_id':community.id, 'username':''}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test invalid community id 
+        response = request('post', '/community/remove_community_participant', view, {'community_id':0, 'username':''}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid community id')
+
+        # test not a participant
+        response = request('post', '/community/remove_community_participant', view, {'community_id':community.id, 'username':''}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'not a participant')
+
+        # test success status
+        response = request('post', '/community/remove_community_participant', view, {'community_id':community.id, 'username':'testuser2'}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
+
 
 
 

@@ -218,7 +218,7 @@ class post_comments(APIView):
         post = Post.objects.filter(id=req.GET['post_id'])
         if not post:
             return Response({'status':'failed', 'error':'invalid post id'})
-        comments = Post_comment.objects.filter(post=post[0])
+        comments = Post_comment.objects.filter(post=post[0]).order_by('-id')
         comments = CommentSerializer(comments, many=True)
         return Response(comments.data)
 
@@ -397,4 +397,27 @@ class delete_community(APIView):
         if req.user != community.creator:
             return Response({'status':'failed', 'error':'permission denied'})
         community.delete()
+        return Response({'status':'success'})
+
+
+class remove_community_participant(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        # check community id
+        community = Community.objects.filter(id=req.POST['community_id'])
+        if not community:
+            return Response({'status':'failed', 'error':'invalid community id'})
+        community = community[0]
+        # check permission
+        if req.user != community.creator:
+            return Response({'status':'failed', 'error':'permission denied'})
+        # check username
+        user = community.participants.filter(username=req.POST.get('username'))
+        if not user:
+            return Response({'status':'failed', 'error':'not a participant'})
+        # remove from community and related events
+        for event in community.event_set.all():
+            event.participants.remove(user[0])
+        community.event_set.filter(creator=user[0]).delete()
+        community.participants.remove(user[0])
         return Response({'status':'success'})

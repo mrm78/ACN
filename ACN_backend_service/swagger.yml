@@ -1811,3 +1811,72 @@ paths:
               error:
                 type: string
                 example: permission denied
+
+
+  /community/remove_community_participant:
+    post:
+      tags:
+        - Community
+      summary: remove a user from community and related events (also delete community events that are created by user)
+      description: remove a user from community and related events (also delete community events that are created by user)
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: community info
+        schema:
+          type: object
+          required:
+          - community_id
+          - username
+          properties:
+            community_id:
+              type: integer
+              example: 5
+            username:
+              type: string
+              example: mrm78
+      responses:
+        200-1:
+          description: success
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: success
+        200-2:
+          description: failed -> invalid community_id
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: invalid community id
+        200-3:
+          description: failed -> permission denied
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: permission denied
+        200-4:
+          description: failed -> not a participant
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                example: failed
+              error:
+                type: string
+                example: not a participant
