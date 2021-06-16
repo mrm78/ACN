@@ -878,7 +878,7 @@ paths:
             type: array
             items:
               type: object
-              example: {'id':1, 'name':'mohamad', 'username':'mrm78', 'bio':'...', 'avatar':'<url>'}
+              example: {'id':1, 'name':'mohamad', 'username':'mrm78', 'bio':'...', 'avatar':'<url>', 'is_admin':true}
         200-2:
           description: failed
           schema:

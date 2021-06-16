@@ -125,8 +125,9 @@ class community_participants(APIView):
             return Response({'status':'failed', 'error':'invalid community id'})
         users = list(community[0].participants.all())
         users.append(community[0].creator)
-        users = OtherUserSerializer(users, many=True)
-        return Response(users.data)
+        users_data = OtherUserSerializer(users, many=True).data
+        users_data = check_is_admin(users_data, community[0])
+        return Response(users_data)
 
 
 class join_community(APIView):
