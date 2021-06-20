@@ -428,6 +428,22 @@ class CommunityTest(APITestCase):
         self.assertEqual(response['status'], 'success')
 
 
+    def test_user_communities(self):
+        view = user_communities.as_view()
+        token = create_user()
+        community = build_community()
+
+        # test invalid username
+        response = request('get', '/community/user_communities', view, {'username':''}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid username')
+
+        # test success status
+        response = request('get', '/community/user_communities', view, {'username':token.user.username}, HTTP_AUTHORIZATION=f'Token {token.key}')[0]
+        self.assertEqual(response['id'], community.id)
+        self.assertEqual(response['title'], community.title)
+        self.assertEqual(response['description'], community.description)
+
+
 
 
 

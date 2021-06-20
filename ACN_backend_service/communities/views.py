@@ -422,3 +422,15 @@ class remove_community_participant(APIView):
         community.event_set.filter(creator=user[0]).delete()
         community.participants.remove(user[0])
         return Response({'status':'success'})
+
+
+class user_communities(APIView):
+    def get(self, req):
+        user = User.objects.filter(username=req.GET.get('username'))
+        if not user:
+            return Response({'status':'failed', 'error':'invalid username'})
+        communities = list(Community.objects.filter(creator=user[0]))
+        communities.extend(list(user[0].joined_communities.all()))
+        communities = CommunitySerializer(communities, many=True).data
+        communities = check_community_membership(communities, user[0], many=True)
+        return Response(communities)
