@@ -190,7 +190,7 @@ export default function Community(props) {
 
                     <ul className="smain_loz">
                     {userinfo[0].is_admin=="true" ? EditCommBtn : ""}
-                    {userinfo[0].is_joined=="true" ? <li className="slozac3">
+                    {userinfo[0].is_joined=="true" | userinfo[0].is_admin=="true" ? <li className="slozac3">
                     <ul className="smain_loz">
                     <li className="slozac30" onClick={() => history.push(`/chat/${props.match.params.comId}`)}>
                     <div className="stitle"><h6>Community Chat</h6></div>
