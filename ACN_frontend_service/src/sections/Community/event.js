@@ -64,7 +64,7 @@ function Event(props){
       <h2>The Best Are Waiting For You</h2>
       <p> {props.eve.description}</p>
       <p className="read-more" onClick={()=>AddPart(props.eve.id)}>
-        <div className="lets">Let's Go</div>
+      <div className="lets2">Edit</div><div className="lets" style={{float:"right"}}>Let's Go</div>
       </p>
     </div>
   </div>
