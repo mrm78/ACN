@@ -382,6 +382,68 @@ class CommunityTest(APITestCase):
         response = request('post', '/community/rate_community', view, {'community_id':community.id, 'value':3}, HTTP_AUTHORIZATION=f'Token {token.key}')
         self.assertEqual(response['status'], 'success')
 
+    
+    def test_delete_community(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        view = delete_community.as_view()
+
+        # test permission denied
+        response = request('post', '/community/delete_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test invalid community id 
+        response = request('post', '/community/delete_community', view, {'community_id':0}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid community id')
+
+        # test success status
+        response = request('post', '/community/delete_community', view, {'community_id':community.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
+
+    
+    def test_remove_community_participant(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        community.participants.add(token2.user)
+        event = build_event(community.id)
+        event.participants.add(token2.user)
+        view = remove_community_participant.as_view()
+
+        # test permission denied
+        response = request('post', '/community/remove_community_participant', view, {'community_id':community.id, 'username':''}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test invalid community id 
+        response = request('post', '/community/remove_community_participant', view, {'community_id':0, 'username':''}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid community id')
+
+        # test not a participant
+        response = request('post', '/community/remove_community_participant', view, {'community_id':community.id, 'username':''}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'not a participant')
+
+        # test success status
+        response = request('post', '/community/remove_community_participant', view, {'community_id':community.id, 'username':'testuser2'}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
+
+
+    def test_user_communities(self):
+        view = user_communities.as_view()
+        token = create_user()
+        community = build_community()
+
+        # test invalid username
+        response = request('get', '/community/user_communities', view, {'username':''}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid username')
+
+        # test success status
+        response = request('get', '/community/user_communities', view, {'username':token.user.username}, HTTP_AUTHORIZATION=f'Token {token.key}')[0]
+        self.assertEqual(response['id'], community.id)
+        self.assertEqual(response['title'], community.title)
+        self.assertEqual(response['description'], community.description)
+
+
 
 
 
@@ -513,3 +575,59 @@ class EventTest(APITestCase):
         view = stories.as_view()
         response = request('get', '/community/stories', view, {}, HTTP_AUTHORIZATION=f'Token {token.key}')
         self.assertEqual(response[0]['is_seen'], 'true')
+
+    
+    def test_edit_event(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        event = build_event(community.id)
+        view = edit_event.as_view()
+        data = {
+            'title': 'test event',
+            'description': 'It is a test event',
+            'event_id': event.id,
+            'image': open('manage.py'),
+            'begin_time': '2 2 2021 12:25:5'
+        }
+        
+        # test permission denied
+        response = request('post', '/community/edit_event', view, data, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test invalid begin time format
+        data['begin_time'] = 'invalid date'
+        response = request('post', '/community/edit_event', view, data, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid begin time format')
+        data['begin_time'] = '2021-05-25T23:14'
+
+        # test success status
+        response = request('post', '/community/edit_event', view, data, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')
+
+
+        # test invalid event id 
+        data['title'] = 'test event'
+        data['event_id'] = 0
+        response = request('post', '/community/edit_event', view, data, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid event id')
+
+        
+    def test_delete_event(self):
+        token = create_user()
+        token2 = create_user(username='testuser2', email='testuser2@acn.com')
+        community = build_community()
+        event = build_event(community.id)
+        view = delete_event.as_view()
+
+        # test permission denied
+        response = request('post', '/community/delete_event', view, {'event_id':event.id}, HTTP_AUTHORIZATION=f'Token {token2.key}')
+        self.assertEqual(response['error'], 'permission denied')
+
+        # test invalid event id 
+        response = request('post', '/community/delete_event', view, {'event_id':0}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['error'], 'invalid event id')
+
+        # test success status
+        response = request('post', '/community/delete_event', view, {'event_id':event.id}, HTTP_AUTHORIZATION=f'Token {token.key}')
+        self.assertEqual(response['status'], 'success')

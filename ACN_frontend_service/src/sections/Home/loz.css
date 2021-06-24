@@ -27,6 +27,9 @@
     .slozac11{
     transform: rotate(-90deg);
 }
+    .slozac10{
+    transform: rotate(-90deg);
+}
     .slozac21{
     transform: rotate(-90deg);
 }
@@ -104,6 +107,21 @@ ul{
     z-index: 10;
 }
 .slozac11{
+    transition: all .4s;
+    transition-timing-function: ease;
+    margin: -0.2vw;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color:rgb(0, 90, 207);
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+}
+.slozac10{
     transition: all .4s;
     transition-timing-function: ease;
     margin: -0.2vw;
@@ -248,6 +266,19 @@ ul{
     background-size: cover;
     background-repeat: no-repeat;
   }
+  .sbg5{
+    transition: all .2s ease-in;
+    background-image: url("../../static/edit.png");
+    background-position: center;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    transform: scale(.8) rotate(-45deg);
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
   .sbg2{
     transition: all .2s ease-in;
     top: 0;
@@ -294,7 +325,18 @@ ul{
   background-position: center;
   background-repeat: no-repeat;
 }
+  .slozac10:hover>.sbg5{
+  opacity: 0;
+  visibility: collapse;
+  transform: scale(.8) rotate(-45deg);
+  background-position: center;
+  background-repeat: no-repeat;
+}
 .slozac11:hover>.stitle{
+    visibility: visible;
+    opacity: 1;
+  }
+.slozac10:hover>.stitle{
     visibility: visible;
     opacity: 1;
   }
@@ -331,6 +373,11 @@ ul{
     animation-iteration-count: infinite;
     animation-duration: 1s;
 }
+.slozac10:hover>.MuiSvgIcon-root{
+    animation-name: down;
+    animation-iteration-count: infinite;
+    animation-duration: 1s;
+}
 .slozac21:hover>.MuiSvgIcon-root{
     animation-name: down;
     animation-iteration-count: infinite;
@@ -355,6 +402,14 @@ ul{
   opacity: 1;
 }
   .slozac11:hover{
+
+    background-color: #ffc107f3;
+      width: 104.5%;
+      height: 104.5%;
+      z-index: 15;
+      cursor: grab;
+  }
+  .slozac10:hover{
 
     background-color: #ffc107f3;
       width: 104.5%;

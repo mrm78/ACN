@@ -97,6 +97,23 @@ const theme = createMuiTheme({
   },
 });
 
+export function dummy(){
+  return true;
+}
+
+export function handleValidation(ttl){
+  let titleError = "";
+
+  if (!ttl) {
+    titleError = "Community needs a title!";
+  }
+
+  if (titleError) {
+    return false;
+  }
+  return true;
+};
+
 export default function CreateCommunity(props) {
   const history = useHistory();
   const classes = useStyle();
@@ -113,6 +130,7 @@ export default function CreateCommunity(props) {
   };
   const [values, setValues] = useState(initialStates);
   const [avatar, setAvatar] = useState();
+
   const [selected, setSelected] = useState([]);
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -121,7 +139,9 @@ export default function CreateCommunity(props) {
     setOpen(false);
   };
 
-
+  const handleTitleChange = () => (event) =>{
+    setTitle(event.target.value);
+  }
   const handleChange = (prop) => (event) => {
     setValues({ ...values, [prop]: event.target.value });
     if (prop === "title") {
@@ -162,13 +182,15 @@ export default function CreateCommunity(props) {
   async function handleOnClick(event) {
     const isValid = handleValidation();
     if (true) {
+      setValues({ ...values, ["title"]: props.bInfo });
       const formData = Const.toFormData({
-        title: values.title ? values.title : '',
+        community_id: props.comId,
+        title: ttl ? ttl : '',
         description: values.description ? values.description : '',
         tags:JSON.stringify(selected),
         image: values.avatar
       });
-      axios.post(`${Const.baseUrl}/community/create_community`, formData, {
+      axios.post(`${Const.baseUrl}/community/edit_community`, formData, {
         headers : {Authorization: localStorage.getItem("token")}
       }).then((res) => {
         if (res.status === 200) {
@@ -202,6 +224,7 @@ export default function CreateCommunity(props) {
 
 
   useEffect(() => {
+
     axios.get(`${Const.baseUrl}/community/tags`).then((response) => {
       setTags(<div className={classes.tagContainer}>
         <FormLabel className={classes.tagLabel}>Tags</FormLabel>
@@ -349,7 +372,7 @@ export default function CreateCommunity(props) {
               color="primary"
               style={{backgroundColor:"#4040ce"}}
             >
-              Create Community
+              Edit Community
             </Button>
           </ThemeProvider>
         </Grid>

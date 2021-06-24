@@ -125,8 +125,9 @@ class community_participants(APIView):
             return Response({'status':'failed', 'error':'invalid community id'})
         users = list(community[0].participants.all())
         users.append(community[0].creator)
-        users = OtherUserSerializer(users, many=True)
-        return Response(users.data)
+        users_data = OtherUserSerializer(users, many=True).data
+        users_data = check_is_admin(users_data, community[0])
+        return Response(users_data)
 
 
 class join_community(APIView):
@@ -218,7 +219,7 @@ class post_comments(APIView):
         post = Post.objects.filter(id=req.GET['post_id'])
         if not post:
             return Response({'status':'failed', 'error':'invalid post id'})
-        comments = Post_comment.objects.filter(post=post[0])
+        comments = Post_comment.objects.filter(post=post[0]).order_by('-id')
         comments = CommentSerializer(comments, many=True)
         return Response(comments.data)
 
@@ -337,3 +338,99 @@ class rate_community(APIView):
             Community_rate(user=req.user, community=community, value=float(req.POST['value'])).save()
         community.update_rate()
         return Response({'status':'success', 'average_rate':community.rate})
+
+
+class edit_event(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        # check event id
+        event = Event.objects.filter(id=req.POST['event_id'])
+        if not event:
+            return Response({'status':'failed', 'error':'invalid event id'})
+        event = event[0]
+        # check permission
+        if req.user != event.creator:
+            return Response({'status':'failed', 'error':'permission denied'})
+        # change title
+        if req.POST.get('title'):
+            event.title = req.POST.get('title')
+        # change description
+        if req.POST.get('description'):
+            event.description = req.POST.get('description')
+        # change image
+        image = req.FILES.get('image')
+        if image and image.size < 4000000:
+            event.image = image
+        # change begin_time
+        if req.POST.get('begin_time'):
+            try:
+                event.begin_time = timezone.datetime.strptime(req.POST['begin_time'], "%Y-%m-%dT%H:%M").replace(tzinfo=pytz.timezone('UTC'))
+            except Exception as e:
+                return Response({'status':'failed', 'error':'invalid begin time format'})
+        event.save()
+        return Response({'status':'success'})
+
+
+class delete_event(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        # check event id
+        event = Event.objects.filter(id=req.POST['event_id'])
+        if not event:
+            return Response({'status':'failed', 'error':'invalid event id'})
+        event = event[0]
+        # check permission
+        if req.user != event.creator:
+            return Response({'status':'failed', 'error':'permission denied'})
+        event.delete()
+        return Response({'status':'success'})
+
+
+class delete_community(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        # check community id
+        community = Community.objects.filter(id=req.POST['community_id'])
+        if not community:
+            return Response({'status':'failed', 'error':'invalid community id'})
+        community = community[0]
+        # check permission
+        if req.user != community.creator:
+            return Response({'status':'failed', 'error':'permission denied'})
+        community.delete()
+        return Response({'status':'success'})
+
+
+class remove_community_participant(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, req):
+        # check community id
+        community = Community.objects.filter(id=req.POST['community_id'])
+        if not community:
+            return Response({'status':'failed', 'error':'invalid community id'})
+        community = community[0]
+        # check permission
+        if req.user != community.creator:
+            return Response({'status':'failed', 'error':'permission denied'})
+        # check username
+        user = community.participants.filter(username=req.POST.get('username'))
+        if not user:
+            return Response({'status':'failed', 'error':'not a participant'})
+        # remove from community and related events
+        for event in community.event_set.all():
+            event.participants.remove(user[0])
+        community.event_set.filter(creator=user[0]).delete()
+        community.participants.remove(user[0])
+        return Response({'status':'success'})
+
+
+class user_communities(APIView):
+    def get(self, req):
+        user = User.objects.filter(username=req.GET.get('username'))
+        if not user:
+            return Response({'status':'failed', 'error':'invalid username'})
+        communities = list(Community.objects.filter(creator=user[0]))
+        communities.extend(list(user[0].joined_communities.all()))
+        communities = CommunitySerializer(communities, many=True).data
+        communities = check_community_membership(communities, user[0], many=True)
+        return Response(communities)
