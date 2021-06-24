@@ -26,6 +26,7 @@ import Com from "../../static/community.jpg"
 import { post } from "jquery";
 import AddIcon from "@material-ui/icons/Add"
 import CreatePE from "../CreatePostEvent/DialogBox"
+import EditCommunity from "../EditCommunity/EditCommunity"
 
 
 
@@ -54,6 +55,9 @@ export default function Community(props) {
     const history = useHistory();
     const [Tab_item, setTab] = useState();
     const [url,setUrl]= useState();
+    const [dOpen, setDOpen] = useState(false);
+
+
 
     const id = props.match.params.comId;
     let Tab_items = null;
@@ -74,16 +78,32 @@ export default function Community(props) {
     }
     const handleDialogClose = () => {
       setDialogOpen(false);
+      setDOpen(false);
     };
 
     const handleDialogOpen = () => {
       setDialogOpen(true);
+    };
+    const handleDOpen = () => {
+      setDOpen(true);
     };
 
     const handleLogout = () => {
       localStorage.removeItem("token");
       window.location.href='/'
     };
+
+    const EditCommBtn = <li className="slozac1">
+    <ul className="smain_loz" >
+    <li className="slozac10" onClick={handleDOpen}>
+    <div className="stitle"><h5>Edit Community</h5></div>
+    <div className="sbg5"></div>
+    <p className="ffont sD_label1"></p>
+
+    </li>
+    </ul>
+    </li>;
+
     useEffect(() => {
 
         // setLoader(true);
@@ -120,25 +140,7 @@ export default function Community(props) {
                 setEvents(response.data)
                 });
 
-        //       setAll_ac(response.data);
-        //     });
-        //   axios
-        //     .post(`${Const.baseUrl}/account/get_user_info`, formData)
-        //     .then((res) => {
-        //       if (res.status === 200) {
-        //         setUserD(res.data);
-        //       } else {
-        //         history.push("/");
-        //       }
-        //     });
-        //   axios.post(`${Const.baseUrl}/event/my_events`, formData).then((res) => {
-        //     setMyE1(res.data);
-        //   });
-        //   axios
-        //     .post(`${Const.baseUrl}/account/events_count`, formData)
-        //     .then((res) => {
-        //       setUserStatic(res.data);
-        //     });
+
         }
       }, []);
       useEffect(() => {
@@ -159,6 +161,7 @@ export default function Community(props) {
                     <div className="loz2">
 
                     <ul className="smain_loz">
+                    {userinfo[0].is_admin=="true" ? EditCommBtn : ""}
                     <li className="slozac3">
                     <ul className="smain_loz">
                     <li className="slozac30" onClick={() => history.push(`/chat/${props.match.params.comId}`)}>
@@ -227,7 +230,7 @@ export default function Community(props) {
                         </Grid>
 
             </div></ThemeProvider>
-
+            <EditCommunity state={dOpen} comId={id} bInfo={userinfo.title} handleClose={handleDialogClose}/>
         </div>
 
           ) : (<Backdrop classes={{
