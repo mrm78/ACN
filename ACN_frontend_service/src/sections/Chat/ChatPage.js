@@ -68,8 +68,10 @@ export default function ChatPage(props) {
   const classes = useStyle();
   const [participants, setParticipant] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [DiOpen,setDiOpen] = useState(false)
-  const [userdata , setUserdata] = useState({})
+  const [DiOpen,setDiOpen] = useState(false);
+  const [userdata , setUserdata] = useState({});
+  const [coms , setComs] = useState({});
+  const [MyC,setMyC] = useState(null);
   const scrollableGrid = useRef();
 
   async function getInfo() {
@@ -90,6 +92,27 @@ export default function ChatPage(props) {
         setParticipant(tempParticipants);
         setIsLoaded(true);
       });
+
+  }
+
+  const getInfo2=(user)=>{
+
+    const formData = new FormData();
+    formData.append("username", user);
+
+    axios.get(`${Const.baseUrl}/community/user_communities`, formData)
+    .then((res) => {
+
+      let tempCom = res.data;
+
+      setMyC(tempCom);
+      console.log("1")
+      console.log(tempCom)
+      console.log("2")
+      //let tab = <div ><Community MyC={MyC}/></div>;
+      //setTab(tab);
+
+    });
   }
   useEffect(() => {
     // scrollableGrid.current.scroll(0, scrollableGrid.current.scrollHeight);
@@ -97,12 +120,29 @@ export default function ChatPage(props) {
   }, []);
 
   const handleProfile=(user)=>{
+
+
+    axios.get(`${Const.baseUrl}/community/user_communities`, {params:{username: user}})
+    .then((res) => {
+
+      let tempCom = res.data;
+
+      setMyC(tempCom);
+      console.log("1")
+      console.log(tempCom)
+      console.log("2")
+      //let tab = <div ><Community MyC={MyC}/></div>;
+      //setTab(tab);
+
+    });
+
     const formData = new FormData();
     formData.append("username",user)
     axios
     .get(`${Const.baseUrl}/account/user_info`, {params:{username: user}}).then((res) => {
       setUserdata(res.data);
     console.log(res.data);
+
     });
 
     setDiOpen(true)
@@ -204,7 +244,7 @@ export default function ChatPage(props) {
         comId={props.match.params.comId}
       />
       <Dialog classes={{paper:classes.Dialog}} aria-labelledby="simple-dialog-title"
-       open={DiOpen} onClose={()=>setDiOpen(false)}>{<Profile userD={userdata} />}</Dialog>
+       open={DiOpen} onClose={()=>setDiOpen(false)}>{<Profile userD={userdata} MyC={MyC} />}</Dialog>
 
     </Grid>
   );

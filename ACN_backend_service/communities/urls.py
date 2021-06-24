@@ -24,4 +24,9 @@ urlpatterns = [
     path('stories', stories.as_view()),
     path('story_info', story_info.as_view()),
     path('rate_community', rate_community.as_view()),
+    path('edit_event', edit_event.as_view()),
+    path('delete_event', delete_event.as_view()),
+    path('delete_community', delete_community.as_view()),
+    path('remove_community_participant', remove_community_participant.as_view()),
+    path('user_communities', user_communities.as_view()),
 ]

@@ -202,7 +202,6 @@ export default function CreateCommunity(props) {
 
 
   useEffect(() => {
-    setValues(props.data);
     axios.get(`${Const.baseUrl}/community/tags`).then((response) => {
       setTags(<div className={classes.tagContainer}>
         <FormLabel className={classes.tagLabel}>Tags</FormLabel>

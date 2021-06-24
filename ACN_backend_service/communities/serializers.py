@@ -68,3 +68,12 @@ def check_stories_seen(events_data, user):
             event_data['is_seen'] = 'false'
     events_data = sorted(events_data,key = lambda event: event['is_seen'])
     return events_data
+
+
+def check_is_admin(users_data, community):
+    for data in users_data:
+        if community.creator.id == data['id']:
+            data['is_admin'] = True
+        else:
+            data['is_admin'] = False
+    return users_data

@@ -2,10 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
     ThemeProvider,
-    CircularProgress,
+    Box,
     createMuiTheme,
     Backdrop,
-    Container,
     Grid,
     Chip,
     makeStyles,
@@ -13,8 +12,11 @@ import {
     Tab,
     Paper,
     Avatar,
-    Button
+    Button,
+    Typography,
+    withStyles,
   } from "@material-ui/core";
+import Rating from '@material-ui/lab/Rating';
 import Const from "../../static/CONST";
 import "./Com.css";
 import pro from '../../static/pro2.png';
@@ -24,18 +26,33 @@ import { useHistory } from "react-router-dom";
 import Butt from "./but"
 import Com from "../../static/community.jpg"
 import { post } from "jquery";
-import AddIcon from "@material-ui/icons/Add"
+import {Add,StarBorder} from "@material-ui/icons"
 import CreatePE from "../CreatePostEvent/DialogBox"
+import Participant from "./Participant.js"
+import EditCommunity from "../EditCommunity/EditCommunity"
 
 
 
 const theme = createMuiTheme({
     palette: {
       secondary: { main: "rgb(0, 90, 207)" },
+      primary: {main: "#FFC107"},
     },
   });
-
-
+  const useStyles = makeStyles({
+    root: {
+      color:"#FFC107",
+      display: 'flex',
+      alignItems:"center",
+      flexDirection: 'column',
+      '& > * + *': {
+        marginTop: theme.spacing(1),
+      },
+    },
+    icon:{
+      display:"block"
+    },
+  });
 
 
 
@@ -54,6 +71,13 @@ export default function Community(props) {
     const history = useHistory();
     const [Tab_item, setTab] = useState();
     const [url,setUrl]= useState();
+    const [rate,setRate]= useState();
+    const [ratetag,setRatetag]= useState();
+    const [drawer , setDrawer]= useState(false);
+    const classes = useStyles();
+    const [dOpen, setDOpen] = useState(false);
+
+
 
     const id = props.match.params.comId;
     let Tab_items = null;
@@ -74,16 +98,37 @@ export default function Community(props) {
     }
     const handleDialogClose = () => {
       setDialogOpen(false);
+      setDOpen(false);
     };
 
     const handleDialogOpen = () => {
       setDialogOpen(true);
     };
-
-    const handleLogout = () => {
-      localStorage.removeItem("token");
-      window.location.href='/'
+    const handleDOpen = () => {
+      setDOpen(true);
     };
+
+    const HandleRate = (e,v) => {
+      const formData = new FormData();
+      formData.append("community_id", props.match.params.comId);
+      formData.append("value", v);
+      axios.post(`${Const.baseUrl}/community/rate_community`,formData).then((response) => {
+          setRate(response.data.average_rate)
+          });      
+    };
+    
+
+    const EditCommBtn = <li className="slozac1">
+    <ul className="smain_loz" >
+    <li className="slozac10" onClick={handleDOpen}>
+    <div className="stitle"><h5>Edit Community</h5></div>
+    <div className="sbg5"></div>
+    <p className="ffont sD_label1"></p>
+
+    </li>
+    </ul>
+    </li>;
+
     useEffect(() => {
 
         // setLoader(true);
@@ -98,6 +143,9 @@ export default function Community(props) {
             setIsjoin(response.data[0].is_joined === "true")
             setUserinfo(response.data);
             setParti(response.data[0].number_of_participants)
+            setRate(response.data[0].rate)
+            setRatetag(<Rating classes={{icon:classes.icon,}} onChange={(e,v)=>HandleRate(e,v)} name="half-rating" defaultValue={response.data[0].rate} precision={0.5} />)
+            console.log(response.data[0].rate)
             if(response.data[0].image){
               setUrl(Const.baseUrl+response.data[0].image)
             }
@@ -120,25 +168,7 @@ export default function Community(props) {
                 setEvents(response.data)
                 });
 
-        //       setAll_ac(response.data);
-        //     });
-        //   axios
-        //     .post(`${Const.baseUrl}/account/get_user_info`, formData)
-        //     .then((res) => {
-        //       if (res.status === 200) {
-        //         setUserD(res.data);
-        //       } else {
-        //         history.push("/");
-        //       }
-        //     });
-        //   axios.post(`${Const.baseUrl}/event/my_events`, formData).then((res) => {
-        //     setMyE1(res.data);
-        //   });
-        //   axios
-        //     .post(`${Const.baseUrl}/account/events_count`, formData)
-        //     .then((res) => {
-        //       setUserStatic(res.data);
-        //     });
+
         }
       }, []);
       useEffect(() => {
@@ -159,16 +189,16 @@ export default function Community(props) {
                     <div className="loz2">
 
                     <ul className="smain_loz">
-                    <li className="slozac3">
+                    {userinfo[0].is_admin=="true" ? EditCommBtn : ""}
+                    {userinfo[0].is_joined=="true" | userinfo[0].is_admin=="true" ? <li className="slozac3">
                     <ul className="smain_loz">
                     <li className="slozac30" onClick={() => history.push(`/chat/${props.match.params.comId}`)}>
                     <div className="stitle"><h6>Community Chat</h6></div>
                     <div className="sbg4"></div>
                     <p className="ffont sD_label3"></p>
-
                     </li>
                     </ul>
-                    </li>
+                    </li> : ""}
                     <li className="slozac4" onClick={() => history.push("/home")}>
                     <div className="sslider sslozac4">
 
@@ -194,6 +224,21 @@ export default function Community(props) {
                         <p >{parti} Participant</p></div>
                     <div className="desc">
                         {userinfo[0].description}</div></div>
+            
+            <Grid className="rate" container style={{padding:"0 10px",marginTop:"20px"}}>
+              <Grid xs={6}>
+                <div className={classes.root} 
+                style={{marginTop:(isjoin||userinfo[0].is_admin=="true")?"0":"14px"}}>{rate}
+                  {(isjoin||userinfo[0].is_admin=="true")?ratetag:""}
+                </div>
+
+              </Grid>
+              <Grid xs={6}>
+              <Button onClick={()=>setDrawer(true)} fullWidth color="primary" style={{marginTop:"10px"}}>
+                Participant</Button>
+              </Grid>
+              <Participant open={drawer} setOpen={setDrawer} isAdmin={userinfo[0].is_admin=="true"} ID={props.match.params.comId}/>
+            </Grid>
             </div>
             <div className="tags">
               { userinfo[0].tags_info.map((chip) => {
@@ -227,7 +272,7 @@ export default function Community(props) {
                         </Grid>
 
             </div></ThemeProvider>
-
+            <EditCommunity state={dOpen} comId={id} bInfo={userinfo.title} handleClose={handleDialogClose}/>
         </div>
 
           ) : (<Backdrop classes={{
@@ -240,7 +285,7 @@ export default function Community(props) {
             <div className="loader"></div>
           </Backdrop>)}
           <Button onClick={handleDialogOpen} color="primary" style={{width:"60px", height:"60px", borderRadius: "30px", position:"fixed", bottom:"20px", right:"20px", backgroundColor:"#efc700"}}>
-           <AddIcon style={{color:"#000000"}}/>
+           <Add style={{color:"#000000"}}/>
           </Button>
           <CreatePE state={isDialogOpen} handleClose={handleDialogClose} comId={id}/>
           </>
