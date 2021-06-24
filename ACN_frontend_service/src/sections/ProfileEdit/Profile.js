@@ -74,7 +74,6 @@ export default function Profile(props) {
   const classes = useStyle();
   const [avatar, setAvatar] = useState("no");
   const handleChange = (e) => {
-    console.log(tmppath)
     const file = e.target.files[0];
     var tmppath = URL.createObjectURL(file)
     setAvatar(tmppath);

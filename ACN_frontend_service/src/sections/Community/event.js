@@ -19,13 +19,23 @@ import {
     Avatar,
   } from "@material-ui/core";
 import { PersonOutline } from "@material-ui/icons";
+import CreatePE from "../CreatePostEvent/DialogEvent.js"
 
 
 function Event(props){
   const [parti , setParti] = useState(props.eve.number_of_participants)
   const [count , setcount] = useState(0)
+  const [isDialogOpen, setDialogOpen] = useState(false);
   const [url,setUrl]= useState(props.eve.image?Const.baseUrl+props.eve.image:"https://bigdata-ir.com/wp-content/uploads/2020/04/Event1.jpg");
   // let liked = pos.liked
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
 
   const AddPart=(id)=>{
     axios.defaults.headers.common['Authorization'] = localStorage.getItem("token")
@@ -63,11 +73,13 @@ function Event(props){
       <h1>{props.eve.title}</h1>
       <h2>The Best Are Waiting For You</h2>
       <p> {props.eve.description}</p>
-      <p className="read-more" onClick={()=>AddPart(props.eve.id)}>
-      <div className="lets2">Edit</div><div className="lets" style={{float:"right"}}>Let's Go</div>
+      <p className="read-more">
+      <div className="lets2" onClick={handleDialogOpen}>Edit</div>
+      <div className="lets" onClick={()=>AddPart(props.eve.id)} style={{float:"right"}}>Let's Go</div>
       </p>
     </div>
   </div>
+  <CreatePE eve={props.eve} state={isDialogOpen} handleClose={handleDialogClose}/>
 </Grid>
 )};
 

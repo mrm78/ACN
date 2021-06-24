@@ -52,7 +52,7 @@ export default function Paricipant(props){
                             <Avatar alt="" src={`${Const.baseUrl}${item.avatar}`} />
                         </ListItemAvatar>
                         <ListItemText primary={item.username} /> 
-                        {props.isAdmin?<ListItemSecondaryAction>
+                        {props.isAdmin & !item.is_admin?<ListItemSecondaryAction>
                         <IconButton onClick={()=>handleDelete(item.username)} edge="end" aria-label="delete">
                             <Delete/>
                         </IconButton>
