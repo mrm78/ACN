@@ -83,7 +83,7 @@ services:
     image: swaggerapi/swagger-ui
     container_name: swagger
     ports:
-      - "8080:8080"
+      - "4003:8080"
     volumes:
       - ./ACN_backend_service:/usr/share/nginx/html/swagger
     environment:
