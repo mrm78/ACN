@@ -77,11 +77,7 @@ export default function Profile(props){
                     </Grid>
 
                         <Grid container sm={4} xs={12} className="h_grid1" justify="center" direction="column"  alignItems="flex-start" style={{paddingLeft:"15px"}}>
-                                <Grid item style={{width:"90%",overflow:'hidden',whiteSpace:'nowrap',textAlign:'start'}}>
-                                  <LocationOn fontSize="small"
-                                    style={{color:"#5588ff" ,marginRight:"7px"}} />
-                                    <h5 className='ffont' style={{color:"rgb(0, 0, 0,.60)",display:"inline-flex"}}>City  :  {userD.city ? userD.city : "N/A"}</h5>
-                                    </Grid>
+                                
                                     <Grid item style={{width:"100%",overflow:'hidden',whiteSpace:'nowrap',textAlign:'start'}}>
                                     <Wc fontSize="small"
                                     style={{color:"#5588ff" ,marginRight:"7px"}}/>
