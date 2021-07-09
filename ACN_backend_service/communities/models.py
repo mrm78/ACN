@@ -25,7 +25,7 @@ class Community(models.Model):
     def update_rate(self):
         rates =  [rate.value for rate in self.rates.all()]
         if rates:
-            self.rate = sum(rates) / len(rates)
+            self.rate = round(sum(rates) / len(rates), 1)
             self.save()
 
 
